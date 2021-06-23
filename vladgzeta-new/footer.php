@@ -25,7 +25,7 @@
 	<div class="copyright">
 		<div class="container">
 			<div class="col-sm-3">
-				<span>2017 © Сайт газеты "Владикавказ"</span>
+				<span>2021 © Сайт газеты "Владикавказ"</span>
 			</div>
 			<div class="col-sm-9">
 				<p>Обо всех замеченных ошибках при работе сайта просьба сообщать при помощи формы обратной связи
@@ -73,8 +73,6 @@ style="width:88px; height:31px; border:0;" alt="Яндекс.Метрика" tit
 
 </footer>
 <div id="toTop" ><i class="fa fa-chevron-up" aria-hidden="true"></i></div>
-<script src="<?php echo get_template_directory_uri(); ?>/js/scripts.min.js"></script>
-<script src="<?php echo get_template_directory_uri(); ?>/js/common.min.js"></script>
 <script src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
 <script src="//yastatic.net/share2/share.js"></script>
 <?php wp_footer(); ?>

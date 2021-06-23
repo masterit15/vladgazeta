@@ -41,7 +41,7 @@ get_header(); ?>
         </div>
     </div>
 </div>
-	<div class="col-sm-3 np">
+<div class="col-sm-3 np">
 <div class="archiv-select">
 		<select onchange="document.location.href=this.options[this.selectedIndex].value;">
 			<option value="">Выберите год...</option> 

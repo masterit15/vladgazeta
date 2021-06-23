@@ -100,6 +100,7 @@ echo 'новости, газета, владикавказ, сайт';
 									</a>
 								</div>			
 								<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+									<button><div class="hamburger"></div></button>
 									<?php wp_nav_menu( array(
 										'theme_location'  => 'menu-top',
 										'menu'            => '', 
@@ -118,7 +119,7 @@ echo 'новости, газета, владикавказ, сайт';
 										'depth'           => 0,
 										'walker'          => '',
 										) ); ?>
-
+										<ul class='hidden-links hidden'></ul>
 									</div> 
 									<?php get_search_form(); ?>  
 							</nav>

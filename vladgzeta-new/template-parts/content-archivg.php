@@ -8,8 +8,6 @@
  */
 
 ?>
-
-<div class="articles-container" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <?php
     $args=array(
         'post_type' => 'gazet',
@@ -41,4 +39,3 @@
             <?php the_posts_pagination(); ?>
         </div>
     </div>
-</div><!-- #post-## -->

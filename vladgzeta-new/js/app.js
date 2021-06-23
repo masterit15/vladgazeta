@@ -1,4 +1,103 @@
+
+import $ from 'jquery'
+import { round } from 'lodash'
+
+window.jQuery = $
+window.$ = $
+
+require('../libs/jquery/jquery.min.js')
+require('../libs/slick/slick.min.js')
+require('lightbox2')
+require('../libs/owl.carousel/owl.carousel.min.js')
+require('../libs/jquery.formstyler/jquery.customSelect.min.js')
+require('jquery-mousewheel')
+require('../libs/perfect.scroll/jquery.mCustomScrollbar.concat.min.js')
+require('../libs/mmenu/jquery.mmenu.all.min.js')
+
 jQuery(function () {
+
+  // $('.sf-menu').each(function(){
+  //   let items = [...$(this).children()]
+  //   let navSize = $('.navbar-collapse').innerWidth() - 100
+  //   let itemsSize = 0
+  //   items.forEach(item => {
+  //     itemsSize += $(item).innerWidth()
+  //   });
+  //   if(navSize < Math.round(itemsSize)){
+  //     let removed = items.splice(-3)
+  //     console.log(removed);
+  //     $(this).append(`<li class="navbar-burger menu-item"><ul>${removed}</ul></li>`)
+  //   }else{
+
+  //   }
+  // })
+
+
+
+var $nav = $('.navbar-collapse');
+var $btn = $('.navbar-collapse button');
+var $vlinks = $('.navbar-collapse .sf-menu');
+var $hlinks = $('.navbar-collapse .hidden-links');
+
+var breaks = [];
+
+function updateNav() {
+  
+  var availableSpace = $btn.hasClass('hidden') ? $nav.width() : $nav.width() - $btn.width() - 100;
+
+  // The visible list is overflowing the nav
+  if($vlinks.width() > availableSpace) {
+
+    // Record the width of the list
+    breaks.push($vlinks.width());
+
+    // Move item to the hidden list
+    $vlinks.children().last().prependTo($hlinks);
+
+    // Show the dropdown btn
+    if($btn.hasClass('hidden')) {
+      $btn.removeClass('hidden');
+    }
+
+  // The visible list is not overflowing
+  } else {
+
+    // There is space for another item in the nav
+    if(availableSpace > breaks[breaks.length-1]) {
+
+      // Move the item to the visible list
+      $hlinks.children().first().appendTo($vlinks);
+      breaks.pop();
+    }
+
+    // Hide the dropdown btn if hidden list is empty
+    if(breaks.length < 1) {
+      $btn.addClass('hidden');
+      $hlinks.addClass('hidden');
+    }
+  }
+
+  // Keep counter updated
+  $btn.attr("count", breaks.length);
+
+  // Recur if the visible list is still overflowing the nav
+  if($vlinks.width() > availableSpace) {
+    updateNav();
+  }
+
+}
+
+  // Window listeners
+
+  $(window).resize(function() {
+      updateNav();
+  });
+
+  $btn.on('click', function() {
+    $hlinks.toggleClass('hidden');
+  });
+
+  updateNav();
   function getHotNews() {
     let url = $('.home-banner').data('action')
     console.log('url', url);
@@ -20,6 +119,20 @@ jQuery(function () {
       }
     });
   }
+  $('.sb-icon-search').on('click', function(){
+    $(this).toggleClass('active')
+    let fa = $(this).find('i.fa')
+    if($(this).hasClass('active')){
+      $('#sb-search').addClass('sb-search-open')
+      $(fa).removeClass('fa-search')
+      $(fa).addClass('fa-times')
+    }else{
+      $('#sb-search').removeClass('sb-search-open')
+      $(fa).removeClass('fa-times')
+      $(fa).addClass('fa-search')
+    }
+    
+  })
   // setInterval(()=>{
   //   getHotNews()
   // }, 10000)
@@ -103,9 +216,6 @@ jQuery(function () {
       },
     }
   });
-
-  //search
-  new UISearch(document.getElementById('sb-search'));
   //lezi laod
   $('body').on('click', '#loadmore_gs', function () {
     $(this).text('Загрузка...');
@@ -192,10 +302,10 @@ jQuery(function () {
   //   $(".toggle-mnu").removeClass("on");
   // });
   //lightbox
-  lightbox.option({
-    'resizeDuration': 200,
-    'wrapAround': true
-  });
+  // lightbox.option({
+  //   'resizeDuration': 200,
+  //   'wrapAround': true
+  // });
 
 });
 var Share = {

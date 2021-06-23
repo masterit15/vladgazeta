@@ -8,7 +8,7 @@
  */
 
 get_header(); ?>
-
+<?php setPostViews(the_ID()); ?>
 <div class="col-md-9">
 	<div class="articles-container wite-content" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 		<div class="inner-article-wrapper">
@@ -52,7 +52,7 @@ get_header(); ?>
 						?>
 						<!-- <p class="autor"><?//php the_author(); ?></p> -->
 					</div><!-- .entry-content -->
-					<div class="row"><?php// show_thumbnails_list(); ?></div>
+					<div class="row"><?show_thumbnails_list(); ?></div>
 					<hr>
 					<div class="b-share-small-wrap">
 						<a onclick="Share.vkontakte('<?php the_permalink(); ?>','<?php the_title(); ?>','http://vladgazeta.gq/wp-content/uploads/2017/03/logo.png','')"><i class="fa fa-vk"></i></a>
@@ -77,7 +77,7 @@ get_header(); ?>
 					'category__in' => $category_ids,
 					'post__not_in' => array($post->ID),
 					'showposts'=>6,
-					'orderby'=>rand,
+					'orderby'=> 'rand',
 					'caller_get_posts'=>1);
 				$my_query = new wp_query($args);
 				if( $my_query->have_posts() ) {
@@ -89,8 +89,10 @@ get_header(); ?>
 						<a class="article-item" href="<?php the_permalink(); ?>">
 							<div class="article-item-photo" style='background-image: url(<?= wp_get_attachment_image_src( get_post_thumbnail_id(), 'full')[0]; ?>)'></div>
 							<div class="article-item-content">
-								<div class="article-item-cat"><?php $cat = get_the_category(); echo $cat[0]->name; ?></div>
-								<span class="article-item-date"><?php the_time('j.m.Y в H:i') ?></span>
+								<div class="article-item-head">
+									<span class="article-item-cat"><?php $cat = get_the_category(); echo $cat[0]->name; ?></span>
+									<span class="article-item-date"><?php the_time('j.m.Y в H:i') ?></span>
+								</div>
 								<h4 class="article-item-title"><?//php title_limit(30, '...'); ?><?php the_title(); ?></h4>
 								<div class="article-item-text">
 									<p class="short_an"><? the_excerpt(); ?></p>

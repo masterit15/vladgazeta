@@ -1,32 +1,42 @@
 {
-  "name": "start-html",
-  "version": "2.0.1",
-  "description": "start-html - Start HTML Template",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Masterit15",
-  "license": "ISC",
-  "devDependencies": {
-    "@babel/core": "^7.14.3",
-    "@babel/preset-env": "^7.14.4",
-    "babel-core": "^7.0.0-bridge.0",
-    "browser-sync": "^2.18.8",
-    "del": "^2.2.2",
-    "gulp": "^3.9.1",
-    "gulp-autoprefixer": "^3.1.1",
-    "gulp-babel": "^8.0.0",
-    "gulp-cache": "^0.4.6",
-    "gulp-clean-css": "^3.0.3",
-    "gulp-concat": "^2.6.1",
-    "gulp-imagemin": "^3.1.1",
-    "gulp-notify": "^3.0.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^3.1.0",
-    "gulp-uglify": "^2.1.0",
-    "gulp-util": "^3.0.8",
-    "vinyl-ftp": "^0.6.0"
-  },
-  "dependencies": {}
+	"name": "optimizedhtml",
+	"version": "5.0.0",
+	"description": "OptimizedHTML 5 - Lightweight Gulp Starter",
+	"main": "index.js",
+	"author": "Masterit15",
+	"license": "ISC",
+	"scripts": {
+		"start": "gulp",
+		"build": "gulp build"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.14.0",
+		"@babel/preset-env": "^7.14.1",
+		"babel-loader": "^8.2.2",
+		"babel-plugin-module-resolver": "^4.1.0",
+		"babel-plugin-root-import": "^6.6.0",
+		"bootstrap": "^4.6.0",
+		"browser-sync": "^2.26.14",
+		"browsersync-ssi": "^0.2.4",
+		"del": "^6.0.0",
+		"gulp": "^4.0.2",
+		"gulp-autoprefixer": "^7.0.1",
+		"gulp-clean-css": "^4.3.0",
+		"gulp-imagemin": "^7.1.0",
+		"gulp-less": "^4.0.1",
+		"gulp-less-glob": "^1.0.0",
+		"gulp-newer": "^1.4.0",
+		"gulp-noop": "^1.0.1",
+		"gulp-rename": "^2.0.0",
+		"gulp-rsync": "0.0.9",
+		"gulp-sass": "^4.1.0",
+		"gulp-sass-glob": "^1.1.0",
+		"gulp-stylus": "^2.7.0",
+		"webpack-stream": "^6.1.2"
+	},
+	"dependencies": {
+		"jquery": "^3.6.0",
+		"jquery-mousewheel": "^3.1.13",
+		"lightbox2": "^2.11.3"
+	}
 }

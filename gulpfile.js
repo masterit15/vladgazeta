@@ -1,125 +1,134 @@
-var gulp           = require('gulp'),
-		gutil          = require('gulp-util' ),
-		babel 				 = require('gulp-babel'),
-		sass           = require('gulp-sass'),
-		browserSync    = require('browser-sync'),
-		concat         = require('gulp-concat'),
-		uglify         = require('gulp-uglify'),
-		cleanCSS       = require('gulp-clean-css'),
-		rename         = require('gulp-rename'),
-		del            = require('del'),
-		imagemin       = require('gulp-imagemin'),
-		cache          = require('gulp-cache'),
-		autoprefixer   = require('gulp-autoprefixer'),
-		ftp            = require('vinyl-ftp'),
-		notify         = require("gulp-notify");
+let preprocessor = 'sass', // Preprocessor (sass, less, styl); 'sass' also work with the Scss syntax in blocks/ folder.
+		fileswatch   = 'php,html,htm,txt,json,md,woff2' // List of files extensions for watching & hard reload
+		basePath = 'vladgzeta-new/'
 
-// Скрипты проекта
+const { src, dest, parallel, series, watch } = require('gulp')
+const browserSync  = require('browser-sync').create()
+const bssi         = require('browsersync-ssi')
+const ssi          = require('ssi')
+const webpack      = require('webpack-stream')
+const sass         = require('gulp-sass')
+const sassglob     = require('gulp-sass-glob')
+const less         = require('gulp-less')
+const lessglob     = require('gulp-less-glob')
+const styl         = require('gulp-stylus')
+const stylglob     = require("gulp-noop")
+const cleancss     = require('gulp-clean-css')
+const autoprefixer = require('gulp-autoprefixer')
+const rename       = require('gulp-rename')
+const imagemin     = require('gulp-imagemin')
+const newer        = require('gulp-newer')
+const rsync        = require('gulp-rsync')
+const del          = require('del')
 
-gulp.task('common-js', function() {
-	return gulp.src([
-		'vladgzeta-new/js/common.js',
-		])
-		.pipe(babel({
-			presets: ['@babel/preset-env']
-		}))
-	.pipe(concat('common.min.js'))
-	
-	.pipe(uglify())
-	.pipe(gulp.dest('vladgzeta-new/js'));
-});
-
-gulp.task('js', ['common-js'], function() {
-	return gulp.src([
-		'vladgzeta-new/libs/jquery/jquery.min.js',
-		'vladgzeta-new/libs/slick/slick.min.js',
-		'vladgzeta-new/libs/lightbox/lightbox-plus-jquery.min.js',
-		'vladgzeta-new/libs/owl.carousel/owl.carousel.min.js',
-		'vladgzeta-new/libs/search/classie.min.js',
-		'vladgzeta-new/libs/search/uisearch.min.js',
-		'vladgzeta-new/libs/jquery.formstyler/jquery.customSelect.min.js',
-		'vladgzeta-new/libs/perfect.scroll/jquery.mCustomScrollbar.concat.min.js',
-		'vladgzeta-new/libs/mmenu/jquery.mmenu.all.min.js',
-		// 'vladgzeta-new/js/common.min.js', // Всегда в конце
-		])
-		.pipe(concat('scripts.min.js'))
-		// .pipe(uglify()) // Минимизировать весь js (на выбор)
-		.pipe(gulp.dest('vladgzeta-new/js'))
-		.pipe(browserSync.reload({stream: true}));
-});
-
-gulp.task('browser-sync', function() {
-	browserSync({
-		proxy: 'vladgazeta.rg',
+function browsersync() {
+	browserSync.init({
+		// server: {
+		// 	baseDir: basePath,
+		// 	middleware: bssi({ baseDir: `${basePath}`, ext: '.html' })
+		// },
+		proxy: {
+			target: "http://vladgazeta.rg:8080/",
+		},
+		// ghostMode: { clicks: false },
 		notify: false,
-		// tunnel: true,
-		// tunnel: "projectmane", //Demonstration page: http://projectmane.localtunnel.me
-	});
-});
+		online: true,
+		// tunnel: 'pitnic.rg', // Attempt to use the URL https://yousutename.loca.lt
+	})
+}
 
-gulp.task('sass', function() {
-	return gulp.src('vladgzeta-new/sass/**/*.sass')
-	.pipe(sass({outputStyle: 'expand'}).on("error", notify.onError()))
-	.pipe(rename({suffix: '.min', prefix : ''}))
-	.pipe(autoprefixer(['last 15 versions']))
-	.pipe(cleanCSS()) // Опционально, закомментировать при отладке
-	.pipe(gulp.dest('vladgzeta-new/css'))
-	.pipe(browserSync.reload({stream: true}));
-});
+function scripts() {
+	return src([`${basePath}js/*.js`, `!${basePath}js/*.min.js`])
+		.pipe(webpack({
+			mode: 'production',
+			performance: { hints: false },
+			module: {
+				rules: [
+					{
+						test: /\.(js)$/,
+						exclude: /(node_modules)/,
+						loader: 'babel-loader',
+						query: {
+							presets: ['@babel/env'],
+							plugins: ['babel-plugin-root-import']
+						}
+					}
+				]
+			}
+		})).on('error', function handleError() {
+			this.emit('end')
+		})
+		.pipe(rename('app.min.js'))
+		.pipe(dest(`${basePath}js`))
+		.pipe(browserSync.stream())
+}
 
-gulp.task('watch', ['sass', 'js', 'browser-sync'], function() {
-	gulp.watch('vladgzeta-new/sass/**/*.sass', ['sass']);
-	gulp.watch(['libs/**/*.js', 'vladgzeta-new/js/common.js'], ['js']);
-	gulp.watch('vladgzeta-new/**/*.php', browserSync.reload);
-});
+function styles() {
+	return src([`${basePath}styles/${preprocessor}/*.*`, `!${basePath}styles/${preprocessor}/_*.*`])
+		.pipe(eval(`${preprocessor}glob`)())
+		.pipe(eval(preprocessor)())
+		.pipe(autoprefixer({ overrideBrowserslist: ['last 10 versions'], grid: true }))
+		.pipe(cleancss({ level: { 1: { specialComments: 0 } },/* format: 'beautify' */ }))
+		.pipe(rename({ suffix: ".min" }))
+		.pipe(dest(`${basePath}css`))
+		.pipe(browserSync.stream())
+}
 
-gulp.task('imagemin', function() {
-	return gulp.src('vladgzeta-new/img/**/*')
-	.pipe(cache(imagemin()))
-	.pipe(gulp.dest('dist/img'));
-});
+function images() {
+	return src([`${basePath}images/src/**/*`])
+		.pipe(newer(`${basePath}images/dist`))
+		.pipe(imagemin())
+		.pipe(dest(`${basePath}images/dist`))
+		.pipe(browserSync.stream())
+}
 
-gulp.task('build', ['removedist', 'imagemin', 'sass', 'js'], function() {
+function buildcopy() {
+	return src([
+		`{${basePath}js,${basePath}css}/*.min.*`,
+		`${basePath}images/**/*.*`,
+		`!${basePath}images/src/**/*`,
+		`${basePath}fonts/**/*`
+	], { base: `${basePath}` })
+	.pipe(dest('dist'))
+}
 
-	var buildFiles = gulp.src([
-		'vladgzeta-new/*.html',
-		'vladgzeta-new/.htaccess',
-		]).pipe(gulp.dest('dist'));
+async function buildhtml() {
+	let includes = new ssi(`${basePath}', 'dist/', '/**/*.html`)
+	includes.compile()
+	del('dist/parts', { force: true })
+}
 
-	var buildCss = gulp.src([
-		'vladgzeta-new/css/main.min.css',
-		]).pipe(gulp.dest('dist/css'));
+function cleandist() {
+	return del('dist/**/*', { force: true })
+}
 
-	var buildJs = gulp.src([
-		'vladgzeta-new/js/scripts.min.js',
-		]).pipe(gulp.dest('dist/js'));
+function deploy() {
+	return src('dist/')
+		.pipe(rsync({
+			root: 'dist/',
+			hostname: 'username@yousite.com',
+			destination: 'yousite/public_html/',
+			// clean: true, // Mirror copy with file deletion
+			include: [/* '*.htaccess' */], // Included files to deploy,
+			exclude: [ '**/Thumbs.db', '**/*.DS_Store' ],
+			recursive: true,
+			archive: true,
+			silent: false,
+			compress: true
+		}))
+}
 
-	var buildFonts = gulp.src([
-		'vladgzeta-new/fonts/**/*',
-		]).pipe(gulp.dest('dist/fonts'));
+function startwatch() {
+	watch(`${basePath}styles/${preprocessor}/**/*`, { usePolling: true }, styles)
+	watch([`${basePath}js/**/*.js`, `!${basePath}js/**/*.min.js`], { usePolling: true }, scripts)
+	watch(`${basePath}images/src/**/*.{jpg,jpeg,png,webp,svg,gif}`, { usePolling: true }, images)
+	watch(`${basePath}**/*.{${fileswatch}}`, { usePolling: true }).on('change', browserSync.reload)
+}
 
-});
-
-gulp.task('deploy', function() {
-
-	var conn = ftp.create({
-		host:      'hostname.com',
-		user:      'username',
-		password:  'userpassword',
-		parallel:  10,
-		log: gutil.log
-	});
-
-	var globs = [
-	'dist/**',
-	'dist/.htaccess',
-	];
-	return gulp.src(globs, {buffer: false})
-	.pipe(conn.dest('/path/to/folder/on/server'));
-
-});
-
-gulp.task('removedist', function() { return del.sync('dist'); });
-gulp.task('clearcache', function () { return cache.clearAll(); });
-
-gulp.task('default', ['watch']);
+exports.scripts = scripts
+exports.styles  = styles
+exports.images  = images
+exports.deploy  = deploy
+exports.assets  = series(scripts, styles, images)
+exports.build   = series(cleandist, scripts, styles, images, buildcopy, buildhtml)
+exports.default = series(scripts, styles, images, parallel(browsersync, startwatch))

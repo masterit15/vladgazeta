@@ -13,7 +13,7 @@
 // require get_template_directory() . '/vendor/autoload.php';
 // use ColorThief\ColorThief;
 // Добавляем кастомный тип записи Продукты
-
+$post_types = get_post_types();
 add_action( 'init', 'register_banner_post_type' );
 function register_banner_post_type() {
     // Раздел фильма - gazetcat
@@ -82,24 +82,24 @@ function register_banner_post_type() {
 add_action("admin_init", "banner_field_init");
 add_action('save_post', 'save_banner_field');
 function banner_field_init() {
-	$post_types = get_post_types();
 	foreach ($post_types as $post_type) {
 		add_meta_box("banner_field", "Дополнительные поля", "banner_field", 'banner', "normal", "low");
 	}
 }
-function admin_style() {
-  wp_enqueue_style('spectrum-styles', get_template_directory_uri().'/libs/spectrum/spectrum.min.css');
-  wp_enqueue_style('admin-styles', get_template_directory_uri().'/admin.css');
+if($post_types == 'post'){
+  function admin_style() {
+    wp_enqueue_style('spectrum-styles', get_template_directory_uri().'/libs/spectrum/spectrum.min.css');
+    wp_enqueue_style('admin-styles', get_template_directory_uri().'/admin.css');
+  }
+  add_action('admin_enqueue_scripts', 'admin_style');
+  function admin_js() {
+    wp_enqueue_script( 'jquery-script', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js' );
+    wp_enqueue_script( 'spectrum-script', get_template_directory_uri() . '/libs/spectrum/spectrum.min.js' );
+    wp_enqueue_script( 'admin-script', get_template_directory_uri() . '/admin.js' );
+    
+  }
+  add_action('admin_enqueue_scripts', 'admin_js');
 }
-add_action('admin_enqueue_scripts', 'admin_style');
-function admin_js() {
-  wp_enqueue_script( 'jquery-script', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js' );
-  wp_enqueue_script( 'spectrum-script', get_template_directory_uri() . '/libs/spectrum/spectrum.min.js' );
-  wp_enqueue_script( 'admin-script', get_template_directory_uri() . '/admin.js' );
-  
-}
-add_action('admin_enqueue_scripts', 'admin_js');
-
 //Дополнительные поля продукта html
 function banner_field() {
 	global $post;

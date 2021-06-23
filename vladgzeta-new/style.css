@@ -422,47 +422,6 @@ object {
 .thumb-of-pdf{
 	max-width: 260px!important;
 }
-.pagination .page-numbers{
-	font-size: 1.8rem;
-	display: inline-block;
-	width: 32px;
-	height: 32px;
-	border-radius: 50%;
-	line-height: 32px;
-}
-.pagination a.page-numbers:hover{
-	background-color: #428bca;
-	border-color: #428bca;
-	color: #fff;
-}
-.pagination a.next{
-	font-size: 1.8rem;
-	display: inline-block;
-	width: auto;
-	height: auto;
-	border-radius: 0;
-	line-height: 32px;
-	padding: 0 10px;
-}
-.pagination a.next:hover{
-	background-color: #428bca;
-	border-color: #428bca;
-	color: #fff;
-}
-.pagination a.prev{
-	font-size: 1.8rem;
-	display: inline-block;
-	width: auto;
-	height: auto;
-	border-radius: 0;
-	line-height: 32px;
-	padding: 0 10px;
-}
-.pagination a.prev:hover{
-	background-color: #428bca;
-	border-color: #428bca;
-	color: #fff;
-}
 .articles-container .pdf-item img{
 	max-height:330px;
 	width: auto;
