@@ -8,7 +8,7 @@
  */
 
 get_header(); ?>
-<?php setPostViews(the_ID()); ?>
+<?//php setPostViews(the_ID()); ?>
 <div class="col-md-9">
 	<div class="articles-container wite-content" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 		<div class="inner-article-wrapper">
@@ -82,7 +82,7 @@ get_header(); ?>
 				$my_query = new wp_query($args);
 				if( $my_query->have_posts() ) {
 					echo '<h3>Похожие записи:</h3>';
-					echo '<div class="articles-container1">';
+					echo '<div class="articles-container">';
 					while ($my_query->have_posts()) {
 						$my_query->the_post();
 						?>

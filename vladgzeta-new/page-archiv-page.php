@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The template for displaying all pages
  *
@@ -13,13 +14,15 @@
  */
 
 get_header(); ?>
-<main id="main" class="pjax-container" role="main">
 <div class="col-md-9">
+  <main id="main" class="pjax-container" role="main">
+    <div class="row">
 
-<?php get_template_part( 'template-parts/content', 'archiv' ); ?>
+      <?php get_template_part('template-parts/content', 'archiv'); ?>
 
+    </div>
+  </main>
 </div>
-</main>
 <?php
 get_sidebar();
 get_footer();

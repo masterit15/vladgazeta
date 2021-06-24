@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The template for displaying all pages
  *
@@ -15,7 +16,9 @@
 get_header(); ?>
 <div class="col-md-9">
 	<main id="main gazet" role="main">
-			<?php get_template_part( 'template-parts/content', 'archivg' ); ?>
+		<div class="row">
+			<?php get_template_part('template-parts/content', 'archivg'); ?>
+		</div>
 	</main>
 </div>
 <?php

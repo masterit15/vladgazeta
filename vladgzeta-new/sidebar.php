@@ -21,7 +21,7 @@ if ( ! is_active_sidebar( 'sidebar-1' ) ) {
 					'post_type' 			=>'gazet', 
 					'type' 						=> 'yearly', 
 					'format' 					=> 'option', 
-					'before'					=>'<span class="first-span">архив за</span>',
+					'before'					=>'<span class="first-span">архив газет за</span>',
 					'after'						=>'<span class="last-span">год</span>',
 					'show_post_count' => 0
 				)); ?>
@@ -43,13 +43,14 @@ if ( ! is_active_sidebar( 'sidebar-1' ) ) {
                 <?//php the_content(); ?>
                 <a href="<?php pdf_file_url(); ?>" target="_blank"><?php the_post_thumbnail( $size, $attr ); ?></a>
                 <div class="all-news">
-                    <a class="btn btn-default pdf-btn" href="http://vladgazeta.online/archivg-page/" target="_blank">Архив</a>
+                    <a class="btn btn-default pdf-btn" href="/archivg-page/" target="_blank">Архив</a>
                 </div>
 
                 <div id="flipbooks1"></div>
             <?php endforeach; ?>        
         </div> 
     </div>
+    <div class="widget">
     <div class="pdf-title"><h3><span><?php echo get_cat_name(15) ?></span></h3></div>
     <ul class="tabs">
     <?php
@@ -81,6 +82,7 @@ if ( ! is_active_sidebar( 'sidebar-1' ) ) {
         wp_reset_query();                
         ?>
     </ul>
+    </div>
     <?php dynamic_sidebar( 'sidebar-1' ); ?>
 
     <div class="widget popular">

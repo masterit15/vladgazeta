@@ -26,7 +26,7 @@ body
   color: #444;
   font-style: normal
   line-height: 20px
-  background-color: #fff
+  background-color: #f4f8fb
   background-attachment: fixed
   // background-image: url("../images/fon.jpg")
   background-position: center bottom
@@ -40,6 +40,7 @@ body
   font-family: 'PT Sans', sans-serif 
 a
   outline: none !important
+  text-decoration: none
   &:hover, &:focus, &:active
     outline: none !important
     color: tomato
@@ -47,14 +48,15 @@ p
   letter-spacing: .5px   
 
 .top-bar
+  display: flex
+  justify-content: space-between
+  flex-direction: row
   width: 100%
   height: 100%
   margin: 0 auto
   padding: 5px 0
   position: relative
   background-color: #fff
-  border-bottom: 1px solid #e5e5e5
-  border-top: 3px solid #0073AA
   & #bt_widget-vi-on a
     background: none
     border: 0 none
@@ -144,20 +146,30 @@ span.customSelect
 .dop-tumb
   padding: 20px    
 .logo
-  height: 125px
+  display: flex
+  justify-content: space-between
+  flex-direction: row
+  align-items: center
+  width: 100%
+  height: 140px
+  margin-top: 15px
+  
+  & h1
+    font-size: 7rem
+    font-family: 'Raleway', sans-serif
   & img
-    max-width: 300px
+    max-width: 100px
     width: 100%
     height: auto
-    margin: 20px
-    filter: grayscale(100%)
-    opacity: .6
+    // filter: grayscale(100%)
+    border-radius: 100%
     transition: all 0.3s ease
     &:hover
       filter: none
       opacity: 1
       transition: all 0.3s ease
-
+.cat-title
+  margin-bottom: 20px
 .languages
   text-align: right
   overflow: hidden
@@ -218,42 +230,17 @@ a.weatherInformer22, a.weatherInformer22:hover
 
 .col-search
   width: 29%
-.toggle-mnu
-  display: none
-  background-color: $dark
-  width: 56px
-  height: 45px
-.hamburger
-  padding: 10px 8px
-.hamburger-inner, .hamburger-inner::after, .hamburger-inner::before
-  background-color: $wite      
-.main-nav
-  background-color: transparent
-  border-radius: 0px
-  border-bottom: 3px solid $dark
-  border-top: 1px solid transparent
-  border-left: 0px
-  border-right: 0px
-  margin-top: 20px
-  & .sf-menu
-    & li
-      & a
-        padding: 15px
-        text-transform: uppercase
-        color: $color
-        transition: all .3s ease
-        &:hover
-          background-color: $dark
-          color: $wite
-          transition: all .3s ease
-  .sub-menu
-    background-color: $wite
-    min-width: 15em       
+
+.screen-reader-text
+  display: none   
 .np
   padding: 0          
 .sidebar
   height: 100%
   margin-bottom: 30px
+  .customSelect, select
+    margin-bottom: 20px
+    width: 100%
 .g-archiv
   padding: 0
   & li
@@ -344,9 +331,13 @@ a.weatherInformer22, a.weatherInformer22:hover
   .text
     &-next
       position: relative
+      display: flex
+      justify-content: space-between
+      align-items: center
       width: 50%
       height: 140px
       line-height: 140px
+      font-weight: bold
       color: $dark
       float: left
       background-color: $wite
@@ -371,9 +362,13 @@ a.weatherInformer22, a.weatherInformer22:hover
         line-height: 140px
     &-prev
       position: relative
+      display: flex
+      justify-content: space-between
+      align-items: center
       width: 50%
       height: 140px
       line-height: 140px
+      font-weight: bold
       color: $dark
       float: left
       background-color: $wite
@@ -551,14 +546,15 @@ a.weatherInformer22, a.weatherInformer22:hover
   position: absolute
   width: 310px
   background-color: #fff
-  right: 0 
-  top: 55px
+  right: 15px
+  top: 75px
   list-style: none
   box-shadow: 0 5px 10px rgba(#000,.3)
   padding: 20px
   z-index: 99
   transition: all .3s ease
   &.hidden
+    display: none
     transition: all .3s ease
   li
     a
@@ -566,6 +562,8 @@ a.weatherInformer22, a.weatherInformer22:hover
       color: $color
       display: block
       margin-bottom: 5px
+      &:hover
+        text-decoration: underline
 
 .test
   height: 100px
@@ -574,8 +572,19 @@ a.weatherInformer22, a.weatherInformer22:hover
   margin-bottom: 30px
   & .col-md-3
     padding: 0
-.navbar-header
-  width: 100%    
+.nav
+  &-wrapper
+    display: flex
+    justify-content: flex-start
+    width: 100%
+    margin: 20px 0
+.navbar
+  display: flex
+  justify-content: space-between
+  width: 100%
+  &-header
+    // display: none
+    width: 100%    
 .navbar-toggle
   background-color: #444
   background-image: none
@@ -602,7 +611,6 @@ a.weatherInformer22, a.weatherInformer22:hover
     background-position: 50% 50%
 .articles-container
   width: 100%
-  height: 100%
   overflow: hidden
   display: flex
   justify-content: flex-start
@@ -769,7 +777,7 @@ a.weatherInformer22, a.weatherInformer22:hover
     position: relative
     text-transform: uppercase
     & span
-      background-color: #FCFCFC
+      background-color: #fff
       bottom: 4px
       display: inline-block
       left: 0
@@ -792,7 +800,7 @@ a.weatherInformer22, a.weatherInformer22:hover
   font-size: 12px
   padding: 15px
   margin-bottom: 20px
-  height: 100% 
+  height: auto
 .vote-list
   list-style: none
   padding: 10px
@@ -957,16 +965,11 @@ a.weatherInformer22, a.weatherInformer22:hover
     padding: 0
 .sb-search
   position: absolute
-  width: 0%
-  min-width: 60px
+  right: 15px
+  width: 60px
   height: 100%
-  right: 0
-  top: 0
   overflow: hidden
-  -webkit-transition: width 0.3s
-  -moz-transition: width 0.3s
   transition: width 0.3s
-  -webkit-backface-visibility: hidden
 
 .sb-search-input
   position: absolute
@@ -976,7 +979,7 @@ a.weatherInformer22, a.weatherInformer22:hover
   outline: none
   background: $wite
   width: 100%
-  height: 45px
+  height: 50px
   margin: 0
   z-index: 10
   padding: 10px
@@ -1052,7 +1055,7 @@ a.weatherInformer22, a.weatherInformer22:hover
     transition: all .3s ease
 
 .sb-search.sb-search-open, .no-js .sb-search
-  width: 100%
+  width: 98.1%
   .sb-search-inp
     margin-right: 60px
 .sb-search.sb-search-open .sb-icon-search, .no-js .sb-search .sb-icon-search
@@ -1423,7 +1426,7 @@ select
 
 .affiche-item
 
-.container-fluid, .navbar-collapse
+.navbar-collapse
   padding: 0
 .item img
   width: 100%
@@ -1649,5 +1652,6 @@ table.informer_currency_table
       opacity: 0.9
       border: 1px solid tomato
       transition: all .3s ease
+@import "menu"
 @import "newstiker"
 @import "media" // Всегда в конце

@@ -1,6 +1,6 @@
 
 import $ from 'jquery'
-import { round } from 'lodash'
+import gsap from 'gsap'
 
 window.jQuery = $
 window.$ = $
@@ -15,89 +15,80 @@ require('../libs/perfect.scroll/jquery.mCustomScrollbar.concat.min.js')
 require('../libs/mmenu/jquery.mmenu.all.min.js')
 
 jQuery(function () {
-
-  // $('.sf-menu').each(function(){
-  //   let items = [...$(this).children()]
-  //   let navSize = $('.navbar-collapse').innerWidth() - 100
-  //   let itemsSize = 0
-  //   items.forEach(item => {
-  //     itemsSize += $(item).innerWidth()
-  //   });
-  //   if(navSize < Math.round(itemsSize)){
-  //     let removed = items.splice(-3)
-  //     console.log(removed);
-  //     $(this).append(`<li class="navbar-burger menu-item"><ul>${removed}</ul></li>`)
-  //   }else{
-
-  //   }
-  // })
-
-
-
-var $nav = $('.navbar-collapse');
-var $btn = $('.navbar-collapse button');
-var $vlinks = $('.navbar-collapse .sf-menu');
-var $hlinks = $('.navbar-collapse .hidden-links');
-
-var breaks = [];
-
-function updateNav() {
+  function cardSlideIn(){
+      var tl = gsap.TimelineMax()
+      tl.to([cardContent,firstCard],.3, {transformOrigin:"50% 50%",opacity:0,scale:"+= .15",y: +30},'cardStart')
+        .to(secondCard,1, {transformOrigin:"50% 50%",opacity:1,scale:"+= .15",y: 0},'cardStart')
+        .to(thirdCard,1, {transformOrigin:"50% 50%",opacity:"+= .2",scale:"+= .1",y:'+=20'},'cardStart')
+        .to(fourthCard,1, {transformOrigin:"50% 50%",opacity:"+= .2",scale:"+= .1",y: "+=15"},'cardStart')
+        .to(cardContentClone,1, {transformOrigin:"50% 50%",opacity:1,scale:"+= .1",y: 0},'cardStart')
+      return tl;
+  }
+  function card_initialize(){
+    let len = $('.home-banner li').length;
+    let top = -10;
+    $('.home-banner li').each(function(){
+      top = top - 10;
+      $(this).css({"top": `${top}px`, "z-index":len});
+      len--;
+    })
+  }
+  $(document).on('click','.next-card', function(){
+    let temp = $(this).parents('li').clone();
+    let ind = $(this).parents('li').index();
+    $(this).parents('li').addClass('drop');
+    setTimeout(function(){
+      $('.home-banner li').eq(ind).remove();
+    },500);
+    setTimeout(function(){
+      $('.home-banner').append(temp);
+      $('.home-banner li').find('button').prop('disabled','disabled');
+       $('.home-banner li').eq(0).find('button').prop('disabled','');
+      card_initialize();
+    },505)
+  })
   
-  var availableSpace = $btn.hasClass('hidden') ? $nav.width() : $nav.width() - $btn.width() - 100;
+  card_initialize();
 
-  // The visible list is overflowing the nav
-  if($vlinks.width() > availableSpace) {
-
-    // Record the width of the list
-    breaks.push($vlinks.width());
-
-    // Move item to the hidden list
-    $vlinks.children().last().prependTo($hlinks);
-
-    // Show the dropdown btn
-    if($btn.hasClass('hidden')) {
-      $btn.removeClass('hidden');
+  function responseMenu(){
+    $('ul.dropdown-menu li.menu-item').appendTo('ul.menu');
+    var items = $('ul.menu li.menu-item');
+    var max_width = $('ul.menu').width() - $('ul.menu li.dd_menu').outerWidth() - 100;
+    var width = 0;
+    var hide_from = 0;
+    items.each(function(index){
+      if (width + $(this).outerWidth() > max_width)
+      {
+        return false;
+      }
+      else
+      {
+        hide_from = index;
+        width += $(this).outerWidth();
+      }
+    });
+    if (hide_from < items.length - 1) {
+      items.eq(hide_from).nextAll('li.menu-item').appendTo('ul.dropdown-menu');
+      $('ul.menu li.dd_menu').show();
     }
-
-  // The visible list is not overflowing
-  } else {
-
-    // There is space for another item in the nav
-    if(availableSpace > breaks[breaks.length-1]) {
-
-      // Move the item to the visible list
-      $hlinks.children().first().appendTo($vlinks);
-      breaks.pop();
+    else
+    {
+      $('ul.menu li.dd_menu').hide();
     }
-
-    // Hide the dropdown btn if hidden list is empty
-    if(breaks.length < 1) {
-      $btn.addClass('hidden');
-      $hlinks.addClass('hidden');
-    }
+    $('ul.menu li.dd_menu .dropdown-toggle').attr('count', $('ul.dropdown-menu').children('li').length)
   }
-
-  // Keep counter updated
-  $btn.attr("count", breaks.length);
-
-  // Recur if the visible list is still overflowing the nav
-  if($vlinks.width() > availableSpace) {
-    updateNav();
-  }
-
-}
-
-  // Window listeners
-
-  $(window).resize(function() {
-      updateNav();
+  
+  $(document).ready(function () {
+    $('.top_menu').on('click', '.dropdown-toggle', function () {
+      $('.dropdown-menu').toggle();
+      $('.dropdown-toggle').toggleClass('active')
+    });
+  
+    $(window).on('resize', function(){
+      responseMenu();
+    }).trigger('resize');
+  
   });
-
-  $btn.on('click', function() {
-    $hlinks.toggleClass('hidden');
-  });
-
-  updateNav();
   function getHotNews() {
     let url = $('.home-banner').data('action')
     console.log('url', url);

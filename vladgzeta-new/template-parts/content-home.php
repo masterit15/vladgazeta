@@ -11,7 +11,7 @@
 <div class="articles-container">
 <?php // Display blog posts on any page @ http://m0n.co/l
 $temp = $wp_query; $wp_query= null;
-$wp_query = new WP_Query('cat=-22'); $wp_query->query('showposts=18' . '&paged='.$paged);
+$wp_query = new WP_Query('cat=-22'); $wp_query->query('showposts=10' . '&paged='.$paged);
 while ($wp_query->have_posts()) : $wp_query->the_post(); 
 ?>
 <a class="article-item" href="<?php the_permalink(); ?>">

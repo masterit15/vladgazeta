@@ -13,29 +13,32 @@
  */
 
 get_header(); ?>
-
-	<div class="home-banner" data-action="<?php echo get_template_directory_uri(); ?>/hotnews.php">
-		<?
-		$reviews = new WP_Query(
-		array(
-			'post_type' => 'banner',
-			'post_status' => 'publish',
-			)
-		);
-		if ($reviews->have_posts()) {while ($reviews->have_posts()) {$reviews->the_post();
-		$custom = get_post_custom($post->ID);
-		$image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full');
-		?>
-		<div class="home-banner-body" style="background-color: <?=$custom['banner_bgcolor'][0]?>">
-			<div class="home-banner-media" style="background-image: url(<?=$image?>);"></div>
-			<div class="home-banner-content" style="color: <?=$custom['banner_titlecolor'][0]?>;">
-				<div class="home-banner-date"><?php the_time('j.m.Y') ?></div>
-				<h2 class="home-banner-title"><?php the_title();?></h2>
-				<p class="home-banner-desc"><?php the_excerpt();?></p>
-			</div>
-		</div>
-		<?}} else {echo 'Ничего не найдено';}wp_reset_postdata();?>
-  </div>
+	<div class="col-sm-12">
+		<ul class="home-banner"  data-action="<?php echo get_template_directory_uri(); ?>/hotnews.php">
+			<?
+			$reviews = new WP_Query(
+			array(
+				'post_type' => 'banner',
+				'post_status' => 'publish',
+				)
+			);
+			if ($reviews->have_posts()) {while ($reviews->have_posts()) {$reviews->the_post();
+			$custom = get_post_custom($post->ID);
+			$image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full');
+			?>
+			<li class="home-banner-body" style="background-color: <?=$custom['banner_bgcolor'][0]?>">
+				<div class="home-banner-media" style="background-image: url(<?=$image?>);"></div>
+				<div class="home-banner-content" style="color: <?=$custom['banner_titlecolor'][0]?>;">
+					<div class="home-banner-date"><?php the_time('j.m.Y в H:m') ?></div>
+					<h2 class="home-banner-title"><?php the_title();?></h2>
+					<p class="home-banner-desc"><?php the_excerpt();?></p>
+				</div>
+				<button type="button" class="next-card" style="color: <?=$custom['banner_titlecolor'][0]?>;"><i class="fa fa-chevron-down"></i></button>
+			</li>
+			<?}} else {echo 'Ничего не найдено';}wp_reset_postdata();?>
+		</ul>
+		
+	</div>
 	<div class="col-md-3">
 		<div class="lenta widget"> 
 			<div class="news-lent">
