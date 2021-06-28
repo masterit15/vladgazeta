@@ -15,6 +15,35 @@ require('../libs/perfect.scroll/jquery.mCustomScrollbar.concat.min.js')
 require('../libs/mmenu/jquery.mmenu.all.min.js')
 
 jQuery(function () {
+  $(document).on('keydown',function (e) {
+		if ((e.ctrlKey && e.keyCode == 13) || (e.metaKey && e.keyCode == 13)) {
+			e.preventDefault();
+			let data = {location: '', text: '', action: 'error_in_the_text'};
+		    if (window.getSelection) {
+          data.text = window.getSelection().toString();
+          data.location = window.location.href
+		    } else if (document.selection && document.selection.type != "Control") {
+          data.text = document.selection.createRange().text;
+          data.location = window.location.href
+		    }
+		    if(data.text!==''){
+		    	$.ajax({
+		    		url: '/molly/molly.submit.php',
+		    		type: 'post',
+		    		data: data,
+            beforeSend: function() {
+              alert('Отправить сообщение об ошибке?')
+            },
+            success: function() {
+              alert('Cообщение об ошибке доставлено, спасибо, что читаете нас!')
+            },
+            error: function (err) {
+              console.error(err);
+            }
+		    	});
+		    }
+		}
+	});
   function cardSlideIn(){
       var tl = gsap.TimelineMax()
       tl.to([cardContent,firstCard],.3, {transformOrigin:"50% 50%",opacity:0,scale:"+= .15",y: +30},'cardStart')

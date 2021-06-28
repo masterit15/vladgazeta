@@ -13,7 +13,6 @@
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
-
 <head>
 	<meta charset="<?php bloginfo('charset'); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -66,24 +65,23 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-12 col-xl-10 offset-xl-1">
-					<div class="logo">
-						<?php echo the_custom_logo(); ?>
+					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="logo">
+						<img src="<?=wp_get_attachment_image_src( get_theme_mod( 'custom_logo' ), 'full' )[0]?>" alt="<?php bloginfo('name'); ?>">
 						<h1><?php bloginfo('name'); ?></h1>
-						<img class="gerb" src="<?php echo get_template_directory_uri(); ?>/images/dist/gerb.png" alt="">
-					</div>
+						<img class="gerb" src="<?php echo get_template_directory_uri(); ?>/images/dist/gerb.png" alt="<?php bloginfo('name'); ?>">
+					</a>
 				</div>
 				<div class="col-12 col-xl-10 offset-xl-1">
 					<!-- begin naviration -->
 					<navigation>
 						<div class="nav-wrapper">
 							<nav class="navbar navbar-default main-nav" role="navigation">
-								<a href="#my-menu" class="toggle-mnu hamburger hamburger--emphatic">
+								<!-- <a href="#my-menu" class="toggle-mnu hamburger hamburger--emphatic">
 									<span class="hamburger-box">
 										<span class="hamburger-inner"></span>
 									</span>
-								</a>
+								</a> -->
 								<div class="top_menu">
-								
 									<?wp_nav_menu(array(
 										'theme_location'  => 'menu-top',
 										'menu'            => '',

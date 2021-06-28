@@ -24,18 +24,19 @@
 				<div class="col-12 col-xl-10 offset-xl-1">
 					<?php dynamic_sidebar('footer'); ?>
 					<div class="col-sm-9">
-						<p>Обо всех замеченных ошибках при работе сайта просьба сообщать при помощи формы обратной связи
-							Использование информации из материалов сайта возможно только с указанием источника и проставлением гиперссылки на сайт vladgazeta.online. Копирование и использование полных материалов сайта без изменений возможно лишь с разрешения редакции<br>
-						</p>
+						<p>О замеченных ошибках просьба сообщать при помощи выделения текста и комбинации клавишь Ctrl/Cmd + Enter</p></br>
+						<p>Использование информации из материалов сайта возможно только с указанием источника и проставлением гиперссылки на сайт vladgazeta.online. Копирование и использование полных материалов сайта без изменений возможно лишь с разрешения редакции</p>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="copyright">
-		<div class="container">
+			<div class="socials">
+					<a href=""><i class="fa fa-facebook-official" aria-hidden="true"></i></a>
+					<a target="_blank" href="https://www.instagram.com/gazeta_vladikavkaz/"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+			</div>
 			<span><?= date('Y') ?> © Сайт газеты "Владикавказ"</span>
-		</div>
 	</div>
 </footer>
 <div id="toTop"><i class="fa fa-chevron-up" aria-hidden="true"></i></div>

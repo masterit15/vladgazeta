@@ -54,7 +54,7 @@ get_header(); ?>
 			</div>
 			<?php endwhile; ?> 
 			</div>
-			<div style="text-align:center;"><a class="btn btn-default pdf-btn" href="<?php echo get_category_link(10); ?>">Все новости</a></div>
+			<div style="text-align:center;"><a class="btn btn-default" href="<?php echo get_category_link(10); ?>">Все новости</a></div>
 		</div>
 		<?php dynamic_sidebar( 'sidebar-2' ); ?>
 	</div>

@@ -165,18 +165,18 @@ function vladgzeta_widgets_init() {
 		'name'          => esc_html__( 'Sidebar', 'vladgzeta' ),
 		'id'            => 'sidebar-1',
 		'description'   => esc_html__( 'Add widgets here.', 'vladgzeta' ),
-		'before_widget' => '<div id="%1$s" class="widget %2$s left-block">',
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
 		'after_widget'  => '</div>',
-		'before_title'  => '<div class="pdf-title"><h3><span>',
+		'before_title'  => '<div class="widget-title"><h3><span>',
 		'after_title'   => '</span></h3></div>',
     ) );
     register_sidebar( array(
     'name'          => esc_html__( 'Sidebar2', 'vladgzeta' ),
     'id'            => 'sidebar-2',
     'description'   => esc_html__( 'Add widgets here.', 'vladgzeta' ),
-    'before_widget' => '<div id="%1$s" class="widget %2$s left-block">',
+    'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget'  => '</div>',
-    'before_title'  => '<div class="pdf-title"><h3><span>',
+    'before_title'  => '<div class="widget-title"><h3><span>',
     'after_title'   => '</span></h3></div>',
     ) );
 
@@ -223,14 +223,14 @@ function vladgzeta_widgets_init() {
         'description'   => esc_html__( 'Add widgets here.', 'vladgzeta' ),
         'before_widget' => '<div id="%1$s" class="widget %2$s">',
         'after_widget'  => '</div>',
-        'before_title'  => '<div class="pdf-title">',
+        'before_title'  => '<div class="widget-title">',
         'after_title'   => '</div>',
         ) );
     register_sidebar( array(
         'name'          => esc_html__( 'footer', 'vladgzeta' ),
         'id'            => 'footer',
         'description'   => esc_html__( 'Add widgets here.', 'vladgzeta' ),
-        'before_widget' => '<div id="%1$s" class="col-md-3 col-sm-3">',
+        'before_widget' => '<div id="%1$s" class="col-12 col-sm-12 col-xl-3">',
         'after_widget'  => '</div>',
         'before_title'  => '<div class="footer-widget"><h4>',
         'after_title'   => '</h4></div>',
@@ -367,7 +367,7 @@ add_action('wp_ajax_nopriv_loadmore', 'true_load_posts');
 add_action( 'init', 'register_gazet_post_type' );
 function register_gazet_post_type() {
     // Раздел фильма - gazetcat
-    register_taxonomy('gazetcat', array('pdf-title'), array(
+    register_taxonomy('gazetcat', array('widget-title'), array(
         'label'                 => 'Раздел Газеты', // определяется параметром $labels->name
         'labels'                => array(
             'name'              => 'Разделы Газет',

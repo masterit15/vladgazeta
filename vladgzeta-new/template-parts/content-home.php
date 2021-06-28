@@ -31,7 +31,7 @@ while ($wp_query->have_posts()) : $wp_query->the_post();
 endwhile; ?> 
 <div class="col-md-12">
 	<div class="all-news">
-		<a href="http://vladgazeta.online/novostnaya-lenta/" class="btn btn-default pdf-btn">Все новости</a>
+		<a href="http://vladgazeta.online/novostnaya-lenta/" class="btn btn-default">Все новости</a>
 	</div>
 	
 </div>

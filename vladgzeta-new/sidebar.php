@@ -27,31 +27,29 @@ if ( ! is_active_sidebar( 'sidebar-1' ) ) {
 				)); ?>
 			</select>
 		</div>
-        <div class="left-block">
-            <div class="widget pdf-item">
-                <?php
-                $args=array(
-                    'post_type' => 'gazet',
-                    'showposts'=>1
-                    );
+        <div class="widget">
+            <?php
+            $args=array(
+                'post_type' => 'gazet',
+                'showposts'=>1
+                );
 
-                $acsessuar = get_posts($args);
-                foreach ($acsessuar as $post) :
-                    setup_postdata($post);
-                ?>
-                <div class="pdf-title"><h3><span>Свежий выпуск</span></h3></div>
-                <?//php the_content(); ?>
-                <a href="<?php pdf_file_url(); ?>" target="_blank"><?php the_post_thumbnail( $size, $attr ); ?></a>
-                <div class="all-news">
-                    <a class="btn btn-default pdf-btn" href="/archivg-page/" target="_blank">Архив</a>
-                </div>
+            $acsessuar = get_posts($args);
+            foreach ($acsessuar as $post) :
+                setup_postdata($post);
+            ?>
+            <div class="widget-title"><h3><span>Свежий выпуск</span></h3></div>
+            <?//php the_content(); ?>
+            <a href="<?php pdf_file_url(); ?>" target="_blank"><?php the_post_thumbnail( $size, $attr ); ?></a>
+            <div class="all-news">
+                <a class="btn btn-default" href="/archivg-page/" target="_blank">Архив</a>
+            </div>
 
-                <div id="flipbooks1"></div>
-            <?php endforeach; ?>        
-        </div> 
-    </div>
+            <div id="flipbooks1"></div>
+        <?php endforeach; ?>        
+    </div> 
     <div class="widget">
-    <div class="pdf-title"><h3><span><?php echo get_cat_name(15) ?></span></h3></div>
+    <div class="widget-title"><h3><span><?php echo get_cat_name(15) ?></span></h3></div>
     <ul class="tabs">
     <?php
         if ( have_posts() ) : // если имеются записи в блоге.
@@ -86,7 +84,7 @@ if ( ! is_active_sidebar( 'sidebar-1' ) ) {
     <?php dynamic_sidebar( 'sidebar-1' ); ?>
 
     <div class="widget popular">
-        <div class="pdf-title"><h3><span>Популярные статьи</span></h3></div>
+        <div class="widget-title"><h3><span>Популярные статьи</span></h3></div>
         <ul class="popular-news">
             <?php
                 $args = array(
