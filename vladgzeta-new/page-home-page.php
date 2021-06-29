@@ -33,6 +33,7 @@ get_header(); ?>
 					<h2 class="home-banner-title"><?php the_title();?></h2>
 					<p class="home-banner-desc"><?php the_excerpt();?></p>
 				</div>
+				<span class="bg" style="background: <?=$custom['banner_bgcolor'][0]?>;background: linear-gradient(0deg, <?=$custom['banner_bgcolor'][0]?> 30%, rgba(255,255,255,0) 100%)"></span>
 				<button type="button" class="next-card" style="color: <?=$custom['banner_titlecolor'][0]?>;"><i class="fa fa-chevron-down"></i></button>
 			</li>
 			<?}} else {echo 'Ничего не найдено';}wp_reset_postdata();?>
