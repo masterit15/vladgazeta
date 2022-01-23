@@ -1,23 +1,5 @@
 <?php
-function PR($var, $all = false, $die = false)
-{
-    $bt = debug_backtrace();
-    $bt = $bt[0];
-    $dRoot = $_SERVER["DOCUMENT_ROOT"];
-    $dRoot = str_replace("/", "\\", $dRoot);
-    $bt["file"] = str_replace($dRoot, "", $bt["file"]);
-    $dRoot = str_replace("\\", "/", $dRoot);
-    $bt["file"] = str_replace($dRoot, "", $bt["file"]);
-?>
-    <div style='position:absolute;font-size:9pt; color:#000; background:#fff; border:1px dashed #000;z-index: 999999'>
-        <div style='padding:3px 5px; background:#99CCFF; font-weight:bold;'>File: <?= $bt["file"] ?> [<?= $bt["line"] ?>]</div>
-        <pre style='padding:10px;'><? print_r($var) ?></pre>
-    </div>
-    <?
-    if ($die) {
-        die;
-    }
-}
+
 // внешние ссылки в новом окне
 function autoblank($text)
 {
@@ -164,6 +146,7 @@ function exclude_cat($query)
 add_filter('pre_get_posts', 'exclude_cat');
 
 
+
 /**
  * Register widget area.
  *
@@ -175,18 +158,9 @@ function vladgzeta_widgets_init()
         'name'          => esc_html__('Sidebar', 'vladgzeta'),
         'id'            => 'sidebar-1',
         'description'   => esc_html__('Add widgets here.', 'vladgzeta'),
-        'before_widget' => '<div id="%1$s" class="widget %2$s">',
+        'before_widget' => '<div id="%1$s" class="widget %2$s left-block">',
         'after_widget'  => '</div>',
-        'before_title'  => '<div class="widget-title"><h3><span>',
-        'after_title'   => '</span></h3></div>',
-    ));
-    register_sidebar(array(
-        'name'          => esc_html__('Sidebar2', 'vladgzeta'),
-        'id'            => 'sidebar-2',
-        'description'   => esc_html__('Add widgets here.', 'vladgzeta'),
-        'before_widget' => '<div id="%1$s" class="widget %2$s">',
-        'after_widget'  => '</div>',
-        'before_title'  => '<div class="widget-title"><h3><span>',
+        'before_title'  => '<div class="pdf-title"><h3><span>',
         'after_title'   => '</span></h3></div>',
     ));
 
@@ -233,14 +207,14 @@ function vladgzeta_widgets_init()
         'description'   => esc_html__('Add widgets here.', 'vladgzeta'),
         'before_widget' => '<div id="%1$s" class="widget %2$s">',
         'after_widget'  => '</div>',
-        'before_title'  => '<div class="widget-title">',
+        'before_title'  => '<div class="pdf-title">',
         'after_title'   => '</div>',
     ));
     register_sidebar(array(
         'name'          => esc_html__('footer', 'vladgzeta'),
         'id'            => 'footer',
         'description'   => esc_html__('Add widgets here.', 'vladgzeta'),
-        'before_widget' => '<div id="%1$s" class="col-12 col-sm-12 col-xl-3">',
+        'before_widget' => '<div id="%1$s" class="col-md-3 col-sm-3">',
         'after_widget'  => '</div>',
         'before_title'  => '<div class="footer-widget"><h4>',
         'after_title'   => '</h4></div>',
@@ -267,8 +241,6 @@ function vladgzeta_scripts()
     wp_enqueue_style('vladgzeta-style', get_stylesheet_uri());
 
     wp_enqueue_style('vladgzeta-bootstrap.min', get_template_directory_uri() . '/css/main.min.css');
-
-    wp_enqueue_script('vladgzeta-app', get_template_directory_uri() . '/js/app.min.js');
     if (is_singular() && comments_open() && get_option('thread_comments')) {
         wp_enqueue_script('comment-reply');
     }
@@ -276,74 +248,76 @@ function vladgzeta_scripts()
 add_action('wp_enqueue_scripts', 'vladgzeta_scripts');
 
 ## Добавляет миниатюры записи в таблицу записей в админке
-add_action('init', 'add_post_thumbs_in_post_list_table', 20);
-function add_post_thumbs_in_post_list_table()
-{
-    // проверим какие записи поддерживают миниатюры
-    $supports = get_theme_support('post-thumbnails');
+if (1) {
+    add_action('init', 'add_post_thumbs_in_post_list_table', 20);
+    function add_post_thumbs_in_post_list_table()
+    {
+        // проверим какие записи поддерживают миниатюры
+        $supports = get_theme_support('post-thumbnails');
 
-    // $ptype_names = array('post','page'); // указывает типы для которых нужна колонка отдельно
+        // $ptype_names = array('post','page'); // указывает типы для которых нужна колонка отдельно
 
-    // Определяем типы записей автоматически
-    if (!isset($ptype_names)) {
-        if ($supports === true) {
-            $ptype_names = get_post_types(array('public' => true), 'names');
-            $ptype_names = array_diff($ptype_names, array('attachment'));
+        // Определяем типы записей автоматически
+        if (!isset($ptype_names)) {
+            if ($supports === true) {
+                $ptype_names = get_post_types(array('public' => true), 'names');
+                $ptype_names = array_diff($ptype_names, array('attachment'));
+            }
+            // для отдельных типов записей
+            elseif (is_array($supports)) {
+                $ptype_names = $supports[0];
+            }
         }
-        // для отдельных типов записей
-        elseif (is_array($supports)) {
-            $ptype_names = $supports[0];
+
+        // добавляем фильтры для всех найденных типов записей
+        foreach ($ptype_names as $ptype) {
+            add_filter("manage_{$ptype}_posts_columns", 'add_thumb_column');
+            add_action("manage_{$ptype}_posts_custom_column", 'add_thumb_value', 10, 2);
         }
     }
 
-    // добавляем фильтры для всех найденных типов записей
-    foreach ($ptype_names as $ptype) {
-        add_filter("manage_{$ptype}_posts_columns", 'add_thumb_column');
-        add_action("manage_{$ptype}_posts_custom_column", 'add_thumb_value', 10, 2);
+    // добавим колонку
+    function add_thumb_column($columns)
+    {
+        // подправим ширину колонки через css
+        add_action('admin_notices', function () {
+            echo '
+            <style>
+                .column-thumbnail{ width:80px; text-align:center; }
+            </style>';
+        });
+
+        $num = 1; // после какой по счету колонки вставлять новые
+
+        $new_columns = array('thumbnail' => __('Thumbnail'));
+
+        return array_slice($columns, 0, $num) + $new_columns + array_slice($columns, $num);
     }
-}
 
-// добавим колонку
-function add_thumb_column($columns)
-{
-    // подправим ширину колонки через css
-    add_action('admin_notices', function () {
-        echo '
-        <style>
-            .column-thumbnail{ width:80px; text-align:center; }
-        </style>';
-    });
+    // заполним колонку
+    function add_thumb_value($colname, $post_id)
+    {
+        if ('thumbnail' == $colname) {
+            $width  = $height = 45;
 
-    $num = 1; // после какой по счету колонки вставлять новые
+            // миниатюра
+            if ($thumbnail_id = get_post_meta($post_id, '_thumbnail_id', true)) {
+                $thumb = wp_get_attachment_image($thumbnail_id, array($width, $height), true);
+            }
+            // из галереи...
+            elseif ($attachments = get_children(array(
+                'post_parent'    => $post_id,
+                'post_mime_type' => 'image',
+                'post_type'      => 'attachment',
+                'numberposts'    => 1,
+                'order'          => 'DESC',
+            ))) {
+                $attach = array_shift($attachments);
+                $thumb = wp_get_attachment_image($attach->ID, array($width, $height), true);
+            }
 
-    $new_columns = array('thumbnail' => __('Thumbnail'));
-
-    return array_slice($columns, 0, $num) + $new_columns + array_slice($columns, $num);
-}
-
-// заполним колонку
-function add_thumb_value($colname, $post_id)
-{
-    if ('thumbnail' == $colname) {
-        $width  = $height = 45;
-
-        // миниатюра
-        if ($thumbnail_id = get_post_meta($post_id, '_thumbnail_id', true)) {
-            $thumb = wp_get_attachment_image($thumbnail_id, array($width, $height), true);
+            echo empty($thumb) ? ' ' : $thumb;
         }
-        // из галереи...
-        elseif ($attachments = get_children(array(
-            'post_parent'    => $post_id,
-            'post_mime_type' => 'image',
-            'post_type'      => 'attachment',
-            'numberposts'    => 1,
-            'order'          => 'DESC',
-        ))) {
-            $attach = array_shift($attachments);
-            $thumb = wp_get_attachment_image($attach->ID, array($width, $height), true);
-        }
-
-        echo empty($thumb) ? ' ' : $thumb;
     }
 }
 
@@ -357,24 +331,30 @@ function true_load_posts()
     if ($q->have_posts()) :
         while ($q->have_posts()) : $q->the_post();
     ?>
-            <a class="article-item" href="<?php the_permalink(); ?>">
-                <? if (wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0]) { ?>
-                    <div class="article-item-photo" style='background-image: url(<?= wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0]; ?>)'></div>
-                <? } ?>
-                <div class="article-item-content">
-                    <div class="article-item-head">
-                        <span class="article-item-cat"><?php $cat = get_the_category();
-                                                        echo $cat[0]->name; ?></span>
-                        <span class="article-item-date"><?php the_time('j.m.Y в H:i') ?></span>
+            <div class="col-md-4 article-item">
+                <div class="row">
+                    <div class="short_photo">
+                        <div class="wrap">
+                            <?php $image_url = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full'); ?>
+                            <a href="<?php the_permalink(); ?>">
+                                <div class='news-img' style='background-image: url(<?php echo $image_url[0]; ?>)'></div>
+                                <div class="arrow"></div>
+                            </a>
+                        </div>
                     </div>
-                    <h4 class="article-item-title"><? //php title_limit(30, '...'); 
-                                                    ?><?php the_title(); ?></h4>
-                    <div class="article-item-text">
-                        <p class="short_an"><? the_excerpt(); ?></p>
-                    </div>
+                    <div class="rubrika-article"><?php $cat = get_the_category();
+                                                    echo $cat[0]->name; ?></div>
                 </div>
-            </a>
-    <?php
+                <div class="article-text">
+                    <span class="article-date"><?php the_time('j.m.Y в H:i') ?></span>
+                    <a href="<?php the_permalink(); ?>">
+                        <h4 class="news-title"><? //php title_limit(30, '...'); 
+                                                ?><?php the_title(); ?></h4>
+                    </a>
+                    <div class="short_an"><?php the_content(); ?></div>
+                </div>
+            </div>
+<?php
         endwhile;
     endif;
     wp_reset_postdata();
@@ -389,7 +369,7 @@ add_action('init', 'register_gazet_post_type');
 function register_gazet_post_type()
 {
     // Раздел фильма - gazetcat
-    register_taxonomy('gazetcat', array('widget-title'), array(
+    register_taxonomy('gazetcat', array('pdf-title'), array(
         'label'                 => 'Раздел Газеты', // определяется параметром $labels->name
         'labels'                => array(
             'name'              => 'Разделы Газет',
@@ -398,7 +378,7 @@ function register_gazet_post_type()
             'all_items'         => 'Все Разделы Газет',
             'parent_item'       => 'Родит. раздел Газеты',
             'parent_item_colon' => 'Родит. раздел Газеты:',
-            'edit_item'         => 'Ред. Раздел Газеты',
+            'edit_item'         => 'Ред. Раздел фильма',
             'update_item'       => 'Обновить Раздел Газеты',
             'add_new_item'      => 'Добавить Раздел Газеты',
             'new_item_name'     => 'Новый Раздел Газеты',
@@ -414,6 +394,34 @@ function register_gazet_post_type()
         'show_admin_column'     => true, // Позволить или нет авто-создание колонки таксономии в таблице ассоциированного типа записи. (с версии 3.5)
     ));
     // Раздел фильма - gazettag
+    // register_taxonomy('gazettag', array('gazet'), array(
+    //     'label'                 => 'Жанр фильмы', // определяется параметром $labels->name
+    //     'labels'                => array(
+    //         'name'                                      => 'Жанры фильмов',
+    //         'singular_name'                             => 'Жанр фильма',
+    //         'search_items'                              => 'Искать Жанр фильма',
+    //         'all_items'                                 => __( 'All Tags' ),
+    //         'popular_items'                                 => __( 'Popular Tags' ),
+    //         'parent_item'                                       => null,
+    //         'parent_item_colon'                         => null,
+    //         'separate_items_with_commas'        => 'Разделяйте метки запятыми',
+    //         'add_or_remove_items'                   => null,
+    //         'choose_from_most_used'                 => 'Выбрать из',
+    //         'edit_item'                                 => 'Ред. Раздел фильма',
+    //         'update_item'                               => 'Обновить Жанр фильма',
+    //         'add_or_remove_items'                       => 'Добавить Жанр фильма',
+    //         'new_item_name'                             => 'Новый Жанр фильма',
+    //         'menu_name'                                 => 'Жанр фильма',
+    //     ),
+    //     'public'                => true,
+    //     'show_in_nav_menus'     => false, // равен аргументу public
+    //     'show_ui'               => true, // равен аргументу public
+    //     'show_tagcloud'         => true, // равен аргументу show_ui
+    //     'hierarchical'          => true,
+    //     'rewrite'               => array('slug'=>'gazet-page', 'hierarchical'=>false, 'with_front'=>false, 'feed'=>false ),
+    //     'show_admin_column'     => true, // Позволить или нет авто-создание колонки таксономии в таблице ассоциированного типа записи. (с версии 3.5)
+    //     'register_meta_box_cb' => 'add_link_metaboxes'
+    // ) );
     // тип записи - фильмы - gazet
     register_post_type('gazet', array(
         'label'               => 'Газеты',
@@ -448,7 +456,6 @@ function register_gazet_post_type()
         'supports'                      => array('title', 'editor', 'excerpt', 'custom-fields', 'thumbnail'),
     ));
 }
-
 
 ## Отфильтруем ЧПУ произвольного типа
 // фильтр: apply_filters( 'post_type_link', $post_link, $post, $leavename, $sample );
@@ -607,21 +614,9 @@ function rd_duplicate_post_link($actions, $post)
     }
     return $actions;
 }
+
 add_filter('post_row_actions', 'rd_duplicate_post_link', 10, 2);
 
-function show_thumbnails_list()
-{
-    global $post;
-    $image = get_post_meta($post->ID, '_link', true);
-    $image = explode(",", $image);
-    echo '<div class="more-img">';
-    foreach ($image as $images) {
-        $url = wp_get_attachment_image_src($images, 1, 1)[0];
-        if (!stripos($url, '/media/default.png'))
-            echo '<a class="more-img-item" style="background-image: url(' . $url . ')" href="' . $url . '" data-lightbox="roadtrip"></a>';
-    }
-    echo '</div>';
-}
 // upload pdf
 add_action("admin_init", "pdf_init");
 add_action('save_post', 'save_pdf_link');
@@ -666,6 +661,29 @@ function save_pdf_link()
     }
     update_post_meta($post->ID, "link", $_POST["link"]);
 }
+add_action('admin_head', 'pdf_css');
+function pdf_css()
+{
+    echo '<style type="text/css">
+        .pdf_select{
+                font-weight:bold;
+                background:#e5e5e5;
+                }
+        .pdf_count{
+                font-size:9px;
+                color:#0066ff;
+                text-transform:uppercase;
+                background:#f3f3f3;
+                border-top:solid 1px #e5e5e5;
+                padding:6px 6px 6px 12px;
+                margin:0px -6px -8px -6px;
+                -moz-border-radius:0px 0px 6px 6px;
+                -webkit-border-radius:0px 0px 6px 6px;
+                border-radius:0px 0px 6px 6px;
+                }
+        .pdf_count span{color:#666;}
+                </style>';
+}
 function pdf_file_url()
 {
     global $post;
@@ -700,18 +718,6 @@ require get_template_directory() . '/inc/customizer.php';
  */
 require get_template_directory() . '/inc/jetpack.php';
 
-/**
- *	Кастомный тип записи Баннеры
- */
-require get_template_directory() . '/inc/banner.php';
-
-
-/**
- *	Кастомный виджет
- */
-require get_template_directory() . '/inc/customWidget.php';
-
-
 //ограничить количество символов в заголовке
 function title_limit($count, $after)
 {
@@ -742,89 +748,17 @@ function exclude_category($query)
 add_filter('pre_get_posts', 'exclude_category');
 
 
-
-
-//Дополнительные поля
-add_action("admin_init", "post_field_init");
-add_action('save_post', 'save_post_field');
-function post_field_init() {
-	$post_types = get_post_types();
-	foreach ($post_types as $post_type) {
-		add_meta_box("post_field", "Дополнительные изображения", "post_field", 'post', "normal", "low");
-	}
-}
-function admin_post_style() {
-	wp_enqueue_style('admin-styles', get_template_directory_uri().'/admin.css');
-}
-add_action('admin_enqueue_scripts', 'admin_post_style');
-if(get_post_type() == 'post'){
-	function admin_js() {
-		wp_enqueue_script( 'jquery-script', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js' );
-		wp_enqueue_script( 'admin-script', get_template_directory_uri() . '/admin.js' );
-	}
-	add_action('admin_enqueue_scripts', 'admin_js');
-}
-// Функция сохранения полей
-function save_post_field(){
+function show_thumbnails_list()
+{
     global $post;
-    if ($post) {
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-            return $post->ID;
-        }
-        update_post_meta($post->ID, "_link", $_POST["link"]);
+    $image = get_post_meta($post->ID, '_link', true);
+    $image = explode(",", $image);
+    foreach ($image as $images) {
+        $url = wp_get_attachment_image_src($images, 1, 1);
+        echo '<div class="col-md-2 np"><a class="img-responsive" href="';
+        echo $url[0];
+        echo '" data-lightbox="roadtrip">';
+        echo wp_get_attachment_image($images, 'thumbnail', false, 1);
+        echo '</a></div>';
     }
-}
-//Дополнительные поля продукта html
-function post_field(){
-    global $post;
-    $custom = get_post_custom($post->ID);
-    $link    = $custom["_link"][0];
-    ?>
-    <div class="post">
-        <div class="post_images">
-            <div class="frame"></div>
-            <input type="hidden" name="link" class="field" value="<?= $link ?>" />
-            <div class="images_edition">
-                <div class="load_more" data-url="<?php echo site_url() ?>/wp-admin/admin-ajax.php" data-post="<?= $post->ID ?>" data-selectcount="<?= count(explode(',', $link)) ?>">Показать еще</div>
-                <div class="edition-selected"></div>
-            </div>
-        </div>
-    </div>
-<?
-}
-add_action('wp_ajax_moreimage', 'moreimage_filter_function'); // wp_ajax_{ACTION HERE} 
-function moreimage_filter_function(){
-    global $post;
-    $ppp = (isset($_POST["ppp"])) ? $_POST["ppp"] : 3;
-    $page = (isset($_POST['pageNumber'])) ? $_POST['pageNumber'] : 0;
-    $custom = get_post_custom($_REQUEST['post']);
-    $link    = $custom["_link"][0];
-    $thelinks = explode(',', $link);
-    $args = array(
-        'post_type' => 'attachment',
-        'post_mime_type' => array(
-            'jpg|jpeg|jpe' => 'image/jpeg',
-            'gif' => 'image/gif',
-            'png' => 'image/png',
-        ),
-        'post_status' => 'inherit',
-        'posts_per_page' => $ppp,
-        'paged'    => $page,
-    );
-    $query_images = new WP_Query( $args );
-    foreach ($query_images->posts as $file) {
-    if (in_array($file->ID, $thelinks)) {?>
-        <label class="checked" for="images_<?=$file->ID?>">
-            <input type="checkbox" group="images" value="<?=$file->ID?>" checked />
-            <div class="img" style="background-image: url('<?=$file->guid?>')"></div>
-        </label>
-    <?} else {?>
-        <label for="images_<?=$file->ID?>">
-            <input id="images_<?=$file->ID?>" type="checkbox" group="images" value="<?=$file->ID?>" />
-            <div class="img" style="background-image: url('<?=$file->guid?>')"></div>
-        </label>
-    <?}
-    $edition++;
-    }
-    die();
 }

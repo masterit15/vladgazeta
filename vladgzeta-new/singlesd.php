@@ -24,21 +24,19 @@ get_header(); ?>
 <!--Индивидуальные стили-->
 <!--Код вывода заголовков постов из категории с миниатюрами-->
 <?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
-<a class="article-item" href="<?php the_permalink(); ?>">
-	<?if(wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0]){?>
-			<div class="article-item-photo" style='background-image: url(<?= wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0]; ?>)'></div>
-	<?}?>
-	<div class="article-item-content">
-		<div class="article-item-head">
-			<span class="article-item-cat"><?php $cat = get_the_category(); echo $cat[0]->name; ?></span>
-			<span class="article-item-date"><?php the_time('j.m.Y в H:i') ?></span>
-		</div>
-		<h4 class="article-item-title"><?//php title_limit(30, '...'); ?><?php the_title(); ?></h4>
-		<div class="article-item-text">
-			<p class="short_an"><? the_excerpt(); ?></p>
-		</div>
+<div class="col-md-4 article-item">
+	<div class="row">
+	<div class="short_photo">
+		<a href="<?php the_permalink(); ?>"><?php the_post_thumbnail(); ?></a>
 	</div>
-</a>
+	<div class="rubrika-article"><?php $cat = get_the_category(); echo $cat[0]->name; ?></div>
+	</div>
+	<div class="article-text">
+		<span class="article-date"><?php the_time('j m Y') ?></span>
+		<a href="<?php the_permalink(); ?>"><h4 class="news-title"><?php the_title(); ?></h4></a>
+		<p class="short_an"><? the_excerpt(); ?></p>
+	</div>
+</div>
         
 <?php endwhile; ?> 
 <?php endif; ?>
