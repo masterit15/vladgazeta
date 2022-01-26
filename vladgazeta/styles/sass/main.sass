@@ -573,9 +573,13 @@ span.customSelect
   position: relative
   width: 100%
 
-.news-lent
-  font-size: 13px
-  padding-bottom: 20px
+.news
+  &-lent
+    font-size: 13px
+    padding-bottom: 20px
+    width: 100%
+  &-feed
+    margin-bottom: 10px
   span
     color: cadetblue
     display: block
@@ -597,8 +601,6 @@ span.customSelect
   overflow: hidden;
   text-align: center;
   width: 55px;
-.news-feed
-  margin-bottom: 10px
 .hidden-links
   position: absolute
   width: 310px
@@ -685,7 +687,7 @@ span.customSelect
     line-height: 1
     margin-bottom: 22px
   & .rubrika
-    background-color: #0071b5;
+    background-color: $accent;
     color: $wite;
     left: 0;
     padding: 1px 20px;
@@ -706,6 +708,8 @@ span.customSelect
     text-align: center  
   & .btn
     margin: 0 auto
+.detail_news 
+  width: 100%
 .article
   &-item
     background-color: $wite
@@ -721,7 +725,7 @@ span.customSelect
     width: 100%
     &-head
       display: flex
-      justify-content: space-between
+      justify-content: flex-end
       flex-direction: row
       color: $color
     &-photo

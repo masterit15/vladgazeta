@@ -157,7 +157,7 @@ function wp_corenavi()
 function exclude_cat($query)
 {
     if ($query->is_home) {
-        $query->set('cat', '-22');
+        $query->set('cat', '-22,-63');
     } // id категории
     return $query;
 }

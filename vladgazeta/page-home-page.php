@@ -12,14 +12,19 @@
  * @package vladgzeta
  */
 
-get_header(); ?>
+get_header(); 
+function catPostCount($id){
+	$category = get_category($id);
+	$count = $category->category_count;
+	return $count > 0 ? true : false;
+}
+?>
 <aside class="aside_left">
+	<?if(catPostCount(10)){?>
 		<div class="lenta widget"> 
 			<div class="news-lent">
 			<?php
-			$id=10; // ID заданной рубрики
-			$n=5;   // количество выводимых записей
-			$recent = new WP_Query("cat=$id&posts_per_page=$n"); 
+			$recent = new WP_Query("cat=10&posts_per_page=5"); 
 			while($recent->have_posts()) : $recent->the_post();
 			?>
 			<div class="news-feed">
@@ -28,8 +33,25 @@ get_header(); ?>
 			</div>
 			<?php endwhile; ?> 
 			</div>
-			<div style="text-align:center;"><a class="btn btn-default" href="<?php echo get_category_link(10); ?>">Все новости</a></div>
+			<div style="text-align:center;"><a class="btn btn-default" href="<?php echo get_category_link(10); ?>">Все <?=get_cat_name(10) ?></a></div>
 		</div>
+		<?}?>
+		<?if(catPostCount(63)){?>
+		<div class="lenta widget"> 
+			<div class="news-lent">
+			<?php
+			$recent = new WP_Query("cat=63&posts_per_page=5"); 
+			while($recent->have_posts()) : $recent->the_post();
+			?>
+			<div class="news-feed">
+				<div class="news-time"><?php the_time('j.m.Y') ?></div>
+				<div class="news-text"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a> </div>
+			</div>
+			<?php endwhile; ?> 
+			</div>
+			<div style="text-align:center;"><a class="btn btn-default" href="<?php echo get_category_link(63); ?>">Все <?=get_cat_name(63) ?></a></div>
+		</div>
+		<?}?>
 		<?php dynamic_sidebar( 'sidebar-2' ); ?>
 </aside>
 <div class="container">

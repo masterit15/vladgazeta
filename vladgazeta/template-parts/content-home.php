@@ -18,9 +18,10 @@
 	while ($wp_query->have_posts()) : $wp_query->the_post();
 	?>
 		<a class="article-item" href="<?php the_permalink(); ?>">
-			<? if (wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0]) { ?>
-				<div class="article-item-photo" style='background-image: url(<?= wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0]; ?>)'></div>
-			<? } ?>
+			<?
+			$img = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0] ? wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0] : get_template_directory_uri() . '/images/dist/no-photo.png';
+			?>
+			<div class="article-item-photo" style='background-image: url(<?= $img ?>)'></div>
 			<span class="article-item-cat"><?php $cat = get_the_category();
 																			echo $cat[0]->name; ?></span>
 			<div class="article-item-content">
