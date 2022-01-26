@@ -703,7 +703,7 @@ require get_template_directory() . '/inc/jetpack.php';
 /**
  *	Кастомный тип записи Баннеры
  */
-require get_template_directory() . '/inc/banner.php';
+// require get_template_directory() . '/inc/banner.php';
 
 
 /**
@@ -750,25 +750,29 @@ add_filter('pre_get_posts', 'exclude_category');
 //Дополнительные поля
 add_action("admin_init", "post_field_init");
 add_action('save_post', 'save_post_field');
-function post_field_init() {
-	$post_types = get_post_types();
-	foreach ($post_types as $post_type) {
-		add_meta_box("post_field", "Дополнительные изображения", "post_field", 'post', "normal", "low");
-	}
+function post_field_init()
+{
+    $post_types = get_post_types();
+    foreach ($post_types as $post_type) {
+        add_meta_box("post_field", "Дополнительные изображения", "post_field", 'post', "normal", "low");
+    }
 }
-function admin_post_style() {
-	wp_enqueue_style('admin-styles', get_template_directory_uri().'/admin.css');
+function admin_post_style()
+{
+    wp_enqueue_style('admin-styles', get_template_directory_uri() . '/admin.css');
 }
 add_action('admin_enqueue_scripts', 'admin_post_style');
-if(get_post_type() == 'post'){
-	function admin_js() {
-		wp_enqueue_script( 'jquery-script', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js' );
-		wp_enqueue_script( 'admin-script', get_template_directory_uri() . '/admin.js' );
-	}
-	add_action('admin_enqueue_scripts', 'admin_js');
+if (get_post_type() == 'post') {
+    function admin_js()
+    {
+        wp_enqueue_script('jquery-script', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js');
+        wp_enqueue_script('admin-script', get_template_directory_uri() . '/admin.js');
+    }
+    add_action('admin_enqueue_scripts', 'admin_js');
 }
 // Функция сохранения полей
-function save_post_field(){
+function save_post_field()
+{
     global $post;
     if ($post) {
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
@@ -778,7 +782,8 @@ function save_post_field(){
     }
 }
 //Дополнительные поля продукта html
-function post_field(){
+function post_field()
+{
     global $post;
     $custom = get_post_custom($post->ID);
     $link    = $custom["_link"][0];
@@ -793,10 +798,11 @@ function post_field(){
             </div>
         </div>
     </div>
-<?
+    <?
 }
 add_action('wp_ajax_moreimage', 'moreimage_filter_function'); // wp_ajax_{ACTION HERE} 
-function moreimage_filter_function(){
+function moreimage_filter_function()
+{
     global $post;
     $ppp = (isset($_POST["ppp"])) ? $_POST["ppp"] : 3;
     $page = (isset($_POST['pageNumber'])) ? $_POST['pageNumber'] : 0;
@@ -814,61 +820,63 @@ function moreimage_filter_function(){
         'posts_per_page' => $ppp,
         'paged'    => $page,
     );
-    $query_images = new WP_Query( $args );
+    $query_images = new WP_Query($args);
     foreach ($query_images->posts as $file) {
-    if (in_array($file->ID, $thelinks)) {?>
-        <label class="checked" for="images_<?=$file->ID?>">
-            <input type="checkbox" group="images" value="<?=$file->ID?>" checked />
-            <div class="img" style="background-image: url('<?=$file->guid?>')"></div>
-        </label>
-    <?} else {?>
-        <label for="images_<?=$file->ID?>">
-            <input id="images_<?=$file->ID?>" type="checkbox" group="images" value="<?=$file->ID?>" />
-            <div class="img" style="background-image: url('<?=$file->guid?>')"></div>
-        </label>
-    <?}
-    $edition++;
+        if (in_array($file->ID, $thelinks)) { ?>
+            <label class="checked" for="images_<?= $file->ID ?>">
+                <input type="checkbox" group="images" value="<?= $file->ID ?>" checked />
+                <div class="img" style="background-image: url('<?= $file->guid ?>')"></div>
+            </label>
+        <? } else { ?>
+            <label for="images_<?= $file->ID ?>">
+                <input id="images_<?= $file->ID ?>" type="checkbox" group="images" value="<?= $file->ID ?>" />
+                <div class="img" style="background-image: url('<?= $file->guid ?>')"></div>
+            </label>
+<? }
+        $edition++;
     }
     die();
 }
 
 // Вывод погоды
 
-function getWeather(){
-	$apiKey 	= "d4f1387247666ca868116674f359e626";
-	$cityId 	= "473249";
-	$apiUrl 	= "http://api.openweathermap.org/data/2.5/weather?id=" . $cityId . "&lang=ru&units=metric&APPID=" . $apiKey;
-	$crequest = curl_init();
-	curl_setopt($crequest, CURLOPT_HEADER, 0);
-	curl_setopt($crequest, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($crequest, CURLOPT_URL, $apiUrl);
-	curl_setopt($crequest, CURLOPT_FOLLOWLOCATION, 1);
-	curl_setopt($crequest, CURLOPT_VERBOSE, 0);
-	curl_setopt($crequest, CURLOPT_SSL_VERIFYPEER, false);
-	$response = curl_exec($crequest);
-	curl_close($crequest);
-	$data 										= json_decode($response);
-	$arWeather['name'] 				= $data->name;
-	$arWeather['currentTime'] = time();
-	$arWeather['status'] 			= mb_convert_case($data->weather[0]->description, MB_CASE_TITLE, "UTF-8");
-	$arWeather['min'] 				= $data->main->temp_min.' °C';
-	$arWeather['max'] 				= $data->main->temp_max.' °C';
-	$arWeather['humidity'] 		= $data->main->humidity;
-	$arWeather['speed'] 			= $data->wind->speed;
-	$arWeather['icon'] 				= $data->weather[0]->icon;
-	return $arWeather;
+function getWeather()
+{
+    $apiKey     = "d4f1387247666ca868116674f359e626";
+    $cityId     = "473249";
+    $apiUrl     = "http://api.openweathermap.org/data/2.5/weather?id=" . $cityId . "&lang=ru&units=metric&APPID=" . $apiKey;
+    $crequest = curl_init();
+    curl_setopt($crequest, CURLOPT_HEADER, 0);
+    curl_setopt($crequest, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($crequest, CURLOPT_URL, $apiUrl);
+    curl_setopt($crequest, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($crequest, CURLOPT_VERBOSE, 0);
+    curl_setopt($crequest, CURLOPT_SSL_VERIFYPEER, false);
+    $response = curl_exec($crequest);
+    curl_close($crequest);
+    $data                     = json_decode($response);
+    $arWeather['name']        = $data->name;
+    $arWeather['currentTime'] = time();
+    $arWeather['status']      = mb_convert_case($data->weather[0]->description, MB_CASE_TITLE, "UTF-8");
+    $arWeather['min']         = $data->main->temp_min . ' °C';
+    $arWeather['max']         = $data->main->temp_max . ' °C';
+    $arWeather['humidity']    = $data->main->humidity;
+    $arWeather['speed']       = $data->wind->speed;
+    $arWeather['icon']        = $data->weather[0]->icon;
+    return $arWeather;
 }
-function Weather(){
-$file			= $_SERVER['DOCUMENT_ROOT'].'/wp-content/themes/'.get_current_theme().'/weather.json';	
-$weather 	= json_decode(file_get_contents($file),TRUE);	
-$interval = round((time() - $weather['currentTime']) / 60); 
-if(count($weather) == 0 or $interval >= 5){
-	file_put_contents($file,json_encode(getWeather()));
-}
-if(count($weather) > 0){
-	echo ('<div class="weather" data-toggle="tooltip" data-placement="bottom" title="'.$weather['status'].' , Влажность: '.$weather['humidity'].'%, Скорость ветра: '.$weather['speed'].' м/с">
-							<span class="weather_max">'.$weather['max'].'</span>
-							<img class="weather_icon" src="https://openweathermap.org/img/wn/'.$weather['icon'].'@2x.png">
-				</div>');
-	}
+function Weather()
+{
+    $file            = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/themes/' . get_current_theme() . '/weather.json';
+    $weather         = json_decode(file_get_contents($file), TRUE);
+    $interval       = round((time() - $weather['currentTime']) / 60);
+    if (count($weather) == 0 or $interval >= 5) {
+        file_put_contents($file, json_encode(getWeather()));
+    }
+    if (count($weather) > 0) {
+        echo ('<div class="weather" data-toggle="tooltip" data-placement="bottom" title="' . $weather['status'] . ' , Влажность: ' . $weather['humidity'] . '%, Скорость ветра: ' . $weather['speed'] . ' м/с">
+				<span class="weather_max">' . $weather['max'] . '</span>
+				<img class="weather_icon" src="https://openweathermap.org/img/wn/' . $weather['icon'] . '@2x.png">
+			</div>');
+    }
 }
