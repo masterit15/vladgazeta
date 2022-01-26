@@ -16,7 +16,6 @@ if (!is_active_sidebar('sidebar-1')) {
 <?Weather()?>
 
 <?
-PR(get_current_theme());
 if(strpos($_SERVER['REQUEST_URI'], 'archivg-page')){?>
     <div class="archiv-select">
         <select onchange="document.location.href=this.options[this.selectedIndex].value;">

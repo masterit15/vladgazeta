@@ -1,6 +1,6 @@
 let preprocessor = 'sass', // Preprocessor (sass, less, styl); 'sass' also work with the Scss syntax in blocks/ folder.
 		fileswatch   = 'php,html,htm,txt,json,md,woff2' // List of files extensions for watching & hard reload
-		basePath = 'vladgzeta/'
+		basePath = 'vladgazeta/'
 
 const { src, dest, parallel, series, watch } = require('gulp')
 const browserSync  = require('browser-sync').create()

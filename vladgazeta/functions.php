@@ -859,7 +859,7 @@ function getWeather(){
 	return $arWeather;
 }
 function Weather(){
-$file			= $_SERVER['DOCUMENT_ROOT'].'/wp-content/themes/vladgzeta-new-new/weather.json';	
+$file			= $_SERVER['DOCUMENT_ROOT'].'/wp-content/themes/'.get_current_theme().'/weather.json';	
 $weather 	= json_decode(file_get_contents($file),TRUE);	
 $interval = round((time() - $weather['currentTime']) / 60); 
 if(count($weather) == 0 or $interval >= 5){
