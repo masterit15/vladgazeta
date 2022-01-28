@@ -33,7 +33,7 @@ function catPostCount($id){
 			</div>
 			<?php endwhile; ?> 
 			</div>
-			<div style="text-align:center;"><a class="btn btn-default" href="<?php echo get_category_link(10); ?>">Все <?=get_cat_name(10) ?></a></div>
+			<div style="text-align:center;"><a class="btn btn-default" href="<?php echo get_category_link(10); ?>"><?=get_cat_name(10) ?></a></div>
 		</div>
 		<?}?>
 		<?if(catPostCount(63)){?>
@@ -49,12 +49,12 @@ function catPostCount($id){
 			</div>
 			<?php endwhile; ?> 
 			</div>
-			<div style="text-align:center;"><a class="btn btn-default" href="<?php echo get_category_link(63); ?>">Все <?=get_cat_name(63) ?></a></div>
+			<div style="text-align:center;"><a class="btn btn-default" href="<?php echo get_category_link(63); ?>"><?=get_cat_name(63) ?></a></div>
 		</div>
 		<?}?>
 		<?php dynamic_sidebar( 'sidebar-2' ); ?>
 </aside>
-<div class="container">
+<div class="container container_home">
 	<div class="main-news">
 		<div class="big-slider owl-carousel"> 
 			<?php

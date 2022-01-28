@@ -714,6 +714,10 @@ require get_template_directory() . '/inc/customWidget.php';
  *	Кастомный настройщик темы 
  */
 require get_template_directory() . '/inc/mycustomizer.php';
+/**
+ *	Кастомный тип записей галерея
+ */
+require get_template_directory() . '/inc/gallery.php';
 
 //ограничить количество символов в заголовке
 function title_limit($count, $after)
@@ -762,14 +766,14 @@ function admin_post_style()
     wp_enqueue_style('admin-styles', get_template_directory_uri() . '/admin.css');
 }
 add_action('admin_enqueue_scripts', 'admin_post_style');
-if (get_post_type() == 'post') {
-    function admin_js()
-    {
+function admin_js()
+{
+    if(str_contains($_SERVER['REQUEST_URI'], '/wp-admin/post.php')){
         wp_enqueue_script('jquery-script', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js');
         wp_enqueue_script('admin-script', get_template_directory_uri() . '/admin.js');
     }
-    add_action('admin_enqueue_scripts', 'admin_js');
 }
+add_action('admin_enqueue_scripts', 'admin_js');
 // Функция сохранения полей
 function save_post_field()
 {
@@ -786,7 +790,7 @@ function post_field()
 {
     global $post;
     $custom = get_post_custom($post->ID);
-    $link    = $custom["_link"][0];
+    $link = $custom["link"][0];
     ?>
     <div class="post">
         <div class="post_images">
@@ -867,7 +871,7 @@ function getWeather()
 }
 function Weather()
 {
-    $file            = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/themes/' . get_current_theme() . '/weather.json';
+    $file            = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/themes/' . wp_get_theme() . '/weather.json';
     $weather         = json_decode(file_get_contents($file), TRUE);
     $interval       = round((time() - $weather['currentTime']) / 60);
     if (count($weather) == 0 or $interval >= 5) {

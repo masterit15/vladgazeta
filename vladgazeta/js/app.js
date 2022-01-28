@@ -8,6 +8,7 @@ window.$ = $
 require('../libs/jquery/jquery.min.js')
 require('../libs/slick/slick.min.js')
 require('lightbox2')
+require('magnific-popup')
 require('../libs/owl.carousel/owl.carousel.min.js')
 require('../libs/jquery.formstyler/jquery.customSelect.min.js')
 require('jquery-mousewheel')
@@ -250,6 +251,12 @@ phoneFormat()
   $(".navToggle").click(function () {
     $(".dop-menu").toggleClass("open");
   });
+  $(".subscrube a").on("click", function (event) {
+		event.preventDefault();
+		var id  = $(this).attr('href'),
+		top = $(id).offset().top;
+		$('body,html').animate({scrollTop: top}, 800);
+	});
   //top scroll
   $(window).scroll(function () {
     if ($(this).scrollTop() != 0) {
@@ -293,27 +300,36 @@ phoneFormat()
         position: 'left'
       }
     });
-  var api = $('#my-menu').data('mmenu');
-  // api.bind('open:finish', function(){
-  //   $('.hamburger').addClass('is-active');
-  // });
-  // api.bind('close:finish', function(){
-  //   $('.hamburger').removeClass('is-active');
-  // });
   $(".toggle-mnu").click(function () {
     $(this).addClass("on");
   });
 
-  var api = $("#mobile-menu").data("mmenu");
-  // api.bind("closed", function () {
-  //   $(".toggle-mnu").removeClass("on");
-  // });
-  //lightbox
-  // lightbox.option({
-  //   'resizeDuration': 200,
-  //   'wrapAround': true
-  // });
-
+  $('.gallery_list_wrap').magnificPopup({
+    delegate: 'a',
+    type: 'image',
+    tLoading: 'Loading image #%curr%...',
+    mainClass: 'mfp-img-mobile',
+    gallery: {
+      enabled: true,
+      navigateByImgClick: true,
+      preload: [0,1] // Will preload 0 - before current, and 1 after the current image
+    },
+    image: {
+      tError: '<a href="%url%">Изображение #%curr%</a> не удалось загрузить.',
+      titleSrc: function(item) {
+        return item.el.attr('title') + '<small>Газета Владикавказ</small>';
+      }
+    },
+    callbacks: {
+      elementParse: function(item) {
+        if($(item.el).hasClass('popup-youtube')) {
+            item.type = 'iframe';
+        } else {
+            item.type = 'image';
+        }
+      }
+    },
+});
 });
 var Share = {
   vkontakte: function (purl, ptitle, pimg, text) {

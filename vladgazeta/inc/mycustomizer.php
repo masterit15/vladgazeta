@@ -51,7 +51,31 @@ add_action('customize_register', function($customizer) {
     'section' => 'section_one',
     'type' => 'text',
   ));
-  
+  $customizer->add_setting('how_subscrube', 
+    array('default' => 'Как подписаться на газету (текст)')
+  );
+  $customizer->add_control('how_subscrube', array(
+    'label' => 'Как подписаться на газету (текст)',
+    'section' => 'section_one',
+    'type' => 'textarea',
+  ));
+
+  $customizer->add_setting( 'subscrube_img', array(
+    // 'default' => 'assets/image/logo.jpg', // Add Default Image URL 
+    'sanitize_callback' => 'esc_url_raw'
+  ));
+
+  $customizer->add_control( new WP_Customize_Image_Control( $customizer, 'subscrube_img', array(
+      'label' => 'Изображение для блока подписки',
+      'priority' => 20,
+      'section' => 'section_one',
+      'settings' => 'subscrube_img',
+      // 'button_labels' => array(// All These labels are optional
+      //             'select' => 'Select Logo',
+      //             'remove' => 'Remove Logo',
+      //             'change' => 'Change Logo',
+      //             )
+  )));
 
   // Настройки соцсетей ==========================================================
   $customizer->add_section(

@@ -19,17 +19,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta property="og:image" content="https://vladgazeta.gq/wp-content/uploads/2017/03/logo.png" />
 	<link rel="canonical" href="https://vladgazeta.online/" />
-	<?php if (is_single() || (is_page())) {
-		if (have_posts()) : while (have_posts()) : the_post();
-				$strDescr = wp_trim_words(get_the_content(), 30, '');
-				$strDescr = preg_split("/[?!] /", $strDescr);
-				echo '<meta name="description" content="' . $strDescr[0] . $strDescr[1] . $strDescr[2] . $strDescr[3] . '" >';
-			endwhile;
-		endif;
-	} else {
-		echo '<meta name="description" content="Официальный сайт газеты Владикавказ" >';
-	}
-	?>
+
 	<meta name="keywords" content="<?php
 																	if (is_single()) {
 																		foreach (get_the_tags($page->ID) as $metki) :

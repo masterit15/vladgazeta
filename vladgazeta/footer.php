@@ -13,7 +13,7 @@
 ?>
 </div><!-- wrapper -->
 <!-- end content -->
-<footer class="footer">
+<footer id="footer" class="footer">
 	<div class="container">
 		<div class="footer_items">
 			<div class="footer_items_item">
@@ -23,10 +23,16 @@
 					<li><strong>Адрес: </strong><?= get_theme_mod('address') ?></li>
 				</ul>
 			</div>
+			<div class="footer_items_item">
+				<h2>Как подписаться на газету</h2>
+				<hr>
+				<p><?= get_theme_mod('how_subscrube') ?></p>
+			</div>
 		</div>
 		<div class="footer_bottom">
 			<p>О замеченных ошибках просьба сообщать при помощи выделения текста и комбинации клавишь Ctrl/Cmd + Enter</p>
 			<p><?= get_theme_mod('copypast') ?></p>
+			
 		</div>
 		<div class="copyright">
 			<ul class="socials">
@@ -35,6 +41,8 @@
 				<li><a href="<?= get_theme_mod('soc_vk') ?>"><i class="fa fa-vk"></i></a></li>
 				<li><a href="<?= get_theme_mod('soc_ok') ?>"><i class="fa fa-odnoklassniki"></i></a></li>
 			</ul>
+			
+			
 			<span><?= get_theme_mod('copyright') ?></span>
 		</div>
 	</div>
