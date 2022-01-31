@@ -24,7 +24,7 @@
 				</ul>
 			</div>
 			<div class="footer_items_item">
-				<h2>Как подписаться на газету</h2>
+				<h2>Как оформить подписку на наше издание</h2>
 				<hr>
 				<p><?= get_theme_mod('how_subscrube') ?></p>
 			</div>
