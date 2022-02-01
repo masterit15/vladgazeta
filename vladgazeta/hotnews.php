@@ -3,7 +3,7 @@
 define('WP_USE_THEMES', false);
 require( $_SERVER['DOCUMENT_ROOT'] . '/wp-load.php');
 
-$result = array('jopa'=>true)
+$result = array('jopa'=>true);
 
 header('Access-Control-Allow-Origin: *');
 header('Content-type: application/json');
