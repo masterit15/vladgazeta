@@ -35,7 +35,10 @@ get_header(); ?>
 						<?php setPostViews(get_the_ID()); ?>
 					<?php
 					endif; ?>
-					<div class="thumbnail-image"><?php the_post_thumbnail(); ?></div>
+					<div class="thumbnail-image">
+						<?php $img = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0]?>
+						<img src="<?=$img?>" alt="">
+				</div>
 				</header><!-- .entry-header -->
 				<div class="entry-content">
 					<?php
