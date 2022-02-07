@@ -134,22 +134,24 @@ function nextAlbum($id)
 }
 //вывод элементов галереи ФОТО и ВИДЕО
 function single_gallery($p, $count = 1000000000000000000){
-	preg_match('~=(.*?)]~', $p->post_content, $output);
-	preg_match('/"([^"]+)"/', $output[1], $ids);
-	$array = explode(",", $ids[1]);
 	$i = 0;
-	$custom = get_post_custom($p->ID);
-	$video    = explode(',', $custom["gallery"][0]);
 	$elArr = array();
-	foreach ($array as $key => $id) {
-		$i++;
-		if ($id != '') {
-			if ($count >= $i) {
-				$imgUrl = wp_get_attachment_image_src($id, 'large')[0];
-				echo '<a class="gallery_item" title="' . $p->post_title . '" class="popup-image" href="' . $imgUrl . '"><div class="gallery_item_media" style="background-image: url(' . $imgUrl . ')"></div></a>';
+	if($p->post_content != ''){
+		preg_match('~=(.*?)]~', $p->post_content, $output);
+		preg_match('/"([^"]+)"/', $output[1], $ids);
+		$array = explode(",", $ids[1]);
+		foreach ($array as $key => $id) {
+			$i++;
+			if ($id != '') {
+				if ($count >= $i) {
+					$imgUrl = wp_get_attachment_image_src($id, 'large')[0];
+					echo '<a class="gallery_item" title="' . $p->post_title . '" class="popup-image" href="' . $imgUrl . '"><div class="gallery_item_media" style="background-image: url(' . $imgUrl . ')"></div></a>';
+				}
 			}
 		}
 	}
+	$custom = get_post_custom($p->ID);
+	$video    = explode(',', $custom["gallery"][0]);
 	foreach ($video as $key => $vd) {
 		$i++;
 		if ($vd != '') {

@@ -41,10 +41,10 @@
 <div class="container">
 		<div class="top-bar">
 			<ul class="socials">
-				<li><a href="<?= get_theme_mod('soc_fac') ?>"><i class="fa fa-facebook"></i></a></li>
-				<li><a href="<?= get_theme_mod('soc_inst') ?>"><i class="fa fa-instagram"></i></a></li>
-				<li><a href="<?= get_theme_mod('soc_vk') ?>"><i class="fa fa-vk"></i></a></li>
-				<li><a href="<?= get_theme_mod('soc_ok') ?>"><i class="fa fa-odnoklassniki"></i></a></li>
+				<li><a target="_blank" href="<?= get_theme_mod('soc_fac') ?>"><i class="fa fa-facebook"></i></a></li>
+				<li><a target="_blank" href="<?= get_theme_mod('soc_inst') ?>"><i class="fa fa-instagram"></i></a></li>
+				<li><a target="_blank" href="<?= get_theme_mod('soc_vk') ?>"><i class="fa fa-vk"></i></a></li>
+				<li><a target="_blank" href="<?= get_theme_mod('soc_ok') ?>"><i class="fa fa-odnoklassniki"></i></a></li>
 			</ul>
 			<?php dynamic_sidebar('spec-v'); ?>
 		</div>
